@@ -430,7 +430,8 @@
       #landscapeOverlay { display: none;
       }
       
-      @media screen and (max-height: 600px) and (max-width: 1000px) and (orientation: landscape) {
+      /* 加入 pointer: coarse 只針對觸控設備(手機平板)生效，避免電腦版縮放誤觸 */
+      @media screen and (max-height: 600px) and (max-width: 1000px) and (orientation: landscape) and (pointer: coarse) {
         #app { display: none !important;
         }
         #landscapeOverlay {
@@ -828,7 +829,8 @@
         {name:"飲料鐵罐",img:"garbage-image/metal-drink-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"餅乾鐵罐",img:"garbage-image/cookie-tin.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"鐵罐",img:"garbage-image/metal-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
-        {name:"殺蟲劑罐、殺蟑劑罐",img:"garbage-image/insecticide-spray-can.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},    
+        {name:"殺蟲劑罐、殺蟑劑罐",img:"garbage-image/insecticide-spray-can.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
+     
         {name:"髮膠噴罐",img:"garbage-image/hair-spray-can.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
         {name:"噴漆罐",img:"garbage-image/spray-paint-can.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
         {name:"卡式爐瓦斯罐、高壓瓶罐(家用)",img:"garbage-image/portable-stove-gas-canisters.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
@@ -842,6 +844,7 @@
         {name:"鋁盆",img:"garbage-image/aluminum-basin.jpg",type:"recycle",desc:"請妥善分類，交給清潔隊循線回收車。"},
         {name:"鋁門窗外框(不含玻璃)",img:"garbage-image/aluminum-door-and-window-frames.jpg",type:"recycle",desc:"簡易清潔後，交給清潔隊循線回收車。"},
         {name:"雪平鍋",img:"garbage-image/yukihira-pot.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
+ 
         {name:"鋁鍋",img:"garbage-image/aluminum-pot.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"果醬罐",img:"garbage-image/jam-jar.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"橄欖油罐",img:"garbage-image/olive-oil-jar.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
@@ -854,6 +857,7 @@
         {name:"飲料玻璃瓶",img:"garbage-image/beverage-glass-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"玻璃奶瓶",img:"garbage-image/glass-baby-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"玻璃保鮮盒",img:"garbage-image/glass-food-storage-container.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
+        
         {name:"香水玻璃瓶",img:"garbage-image/perfume-glass-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"紙盒",img:"garbage-image/paper-box.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"一般紙提袋、購物紙袋",img:"garbage-image/shopping-paper-bag.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
@@ -867,6 +871,7 @@
         {name:"利樂包",img:"garbage-image/tetra-pak-cartons.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"鋁箔包",img:"garbage-image/aluminum-foil-package.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"飲料紙盒包",img:"garbage-image/beverage-paper-carton.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
+    
         {name:"泡麵紙碗",img:"garbage-image/instant-noodle-paper-bowl.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"便當紙盒、紙碗、紙杯",img:"garbage-image/paper-lunch-box-bowl-cup.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         
@@ -892,6 +897,7 @@
         {name:"強化玻璃窗戶",img:"garbage-image/tempered-glass-window.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"汽車擋風玻璃",img:"garbage-image/car-windshield-glass.jpg",type:"other",desc:"為事業廢棄物，請自行委託合法的清除處理業者清運處理。"},
         {name:"白玻璃(優白玻璃、浮式明版玻璃)",img:"garbage-image/ultra-clear-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
+    
         {name:"魚缸玻璃",img:"garbage-image/fish-tank-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"化學用品罐",img:"garbage-image/chemical-glass-jar.jpg",type:"other",desc:"有骷顱頭、火焰等標示者請務必逆向回收予原製造或購置廠商。"},
       ];
@@ -901,11 +907,15 @@
         "rule-image/rule-page3.png",
         "rule-image/rule-page4.png"
       ];
+      
       let rulePage = 0;
       let lives,score,totalQ,current,timeLimit,endTime,timer;
       let canDrop=false;
       let dragging=false;
       let pendingGameOver=false;
+      
+      // ===== 新增：記錄最近出過的題目圖片，用於防重複 =====
+      let recentImages = []; 
 
       function showPage(id){
         if (id !== 'home') pushLayer();
@@ -1010,12 +1020,19 @@
       
       function startGame(){
         closeAllMasks();
+        
+        // ===== 【核心修正】：塞入「歷史紀錄緩衝墊 (Buffer State)」 =====
+        // 這樣可以保證玩家就算在遊戲內連點兩次返回鍵，也只是吃掉這個緩衝區，而不會跳出網頁
+        if (isMobile) history.pushState({ buffer: true }, "", location.href);
+        
         canDrop = true;
         dragging = false;
         pendingGameOver = false;
         lives=5;
         score=0;
         totalQ=0;
+        recentImages = []; // 新遊戲重置記憶題庫
+        
         document.getElementById("gameOver").style.display="none";
         showPage("gamePage");
         renderLives();
@@ -1054,7 +1071,24 @@
         timeLimit=10-Math.floor((totalQ-1)/5)*2;
         if(timeLimit<4) timeLimit=4;
         
-        current=garbageList[Math.floor(Math.random()*garbageList.length)];
+        // ===== 實作防重複機制 (最近 10 題不會出現相同的圖片) =====
+        let availableGarbage = garbageList.filter(item => !recentImages.includes(item.img));
+        
+        // 防呆機制：如果真的全部都被抽光了（通常不會，因為題庫有 80 幾題），就開放全部題庫
+        if (availableGarbage.length === 0) {
+            availableGarbage = garbageList;
+        }
+        
+        // 從過濾後的題庫中隨機抽題
+        current = availableGarbage[Math.floor(Math.random() * availableGarbage.length)];
+        
+        // 將剛抽出的題目加入近期記憶中
+        recentImages.push(current.img);
+        // 若記憶超過 10 題，就把最舊的那一題忘掉，讓它有機會再次出現
+        if (recentImages.length > 10) {
+            recentImages.shift();
+        }
+        // =======================================================
         
         document.getElementById("garbage").src=current.img;
         document.getElementById("garbageName").innerText=current.name;
@@ -1115,8 +1149,8 @@
         
         document.getElementById("feedbackTitle").innerHTML =
         correct ?
-        "<span style='color:#4fbe41'>正確</span>" :
-        "<span style='color:red'>錯誤</span>";
+        "<span style='color:#4fbe41'>正確！</span>" :
+        "<span style='color:red'>錯誤！</span>";
         document.getElementById("feedbackText").innerHTML =
         `${typeName(current.type)}<br>${current.desc}`;
       }
