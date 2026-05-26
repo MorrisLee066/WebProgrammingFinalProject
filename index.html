@@ -752,6 +752,7 @@
           // 第二次按返回鍵：關閉確認框並恢復遊戲
           exitC.style.display = "none";
           canDrop = true; // 恢復拖曳功能
+          pushLayer(); // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
         } else if (feedback.style.display === "flex" || feedback.style.display === "block") {
           processFeedbackNext();
         } else if (gameO.style.display === "flex") {
@@ -760,19 +761,15 @@
           // 第一次按返回鍵：跳出退出確認，不暫停計時器
           exitC.style.display = "flex";
           canDrop = false; // 避免確認框出現時還能背景拖曳
+          pushLayer(); // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
         } else if (refPage.style.display === "flex" || refPage.style.display === "block") {
           showPage("home");
         }
       }
 
       // 手機實體返回鍵監聽
-      // 核心策略：popstate 被觸發時瀏覽器已經把一層 history 彈出了，
-      // 所以我們 **先** 立刻推回一層保護狀態，再去判斷要做什麼。
-      // 這樣不管使用者連按幾下返回鍵，都不會真的離開頁面。
       if (isMobile) {
         window.addEventListener('popstate', (e) => {
-          // 立刻補回被消耗掉的 history 層，防止退回上一頁
-          history.pushState({ guard: true, timestamp: Date.now() }, "", location.href);
           handleBackAction();
         });
       }
@@ -1083,8 +1080,8 @@
         
         document.getElementById("feedbackTitle").innerHTML =
         correct ?
-        "<span style='color:#4fbe41'>正確</span>" :
-        "<span style='color:red'>錯誤</span>";
+        "<span style='color:#4fbe41'>正確！</span>" :
+        "<span style='color:red'>錯誤！</span>";
         document.getElementById("feedbackText").innerHTML =
         `${typeName(current.type)}<br>${current.desc}`;
       }
