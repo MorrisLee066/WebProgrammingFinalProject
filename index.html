@@ -686,7 +686,7 @@
         
         </div>
 
-        <div id="feedbackMask" onclick="if(event.target===this) delayedAction(() => processFeedbackNext())">
+        <div id="feedbackMask" onclick="if(event.target===this) delayedAction(() => { if(isMobile) history.back(); else processFeedbackNext(); })">
           <div id="feedback">
             <div id="feedbackFlex">
               <div>
@@ -728,6 +728,11 @@
       document.body.addEventListener('touchstart', function() {}, {passive: true});
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 0);
       
+      // ===== 主動式 History 狀態層次管理 =====
+      function pushLayer() {
+        if (isMobile) history.pushState({ timestamp: Date.now() }, "", location.href);
+      }
+
       // ===== 統一的返回(剝除層次)處理邏輯 =====
       function handleBackAction() {
         const detail = document.getElementById("detailMask");
@@ -747,6 +752,7 @@
           // 第二次按返回鍵：關閉確認框並恢復遊戲
           exitC.style.display = "none";
           canDrop = true; // 恢復拖曳功能
+          pushLayer(); // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
         } else if (feedback.style.display === "flex" || feedback.style.display === "block") {
           processFeedbackNext();
         } else if (gameO.style.display === "flex") {
@@ -755,18 +761,15 @@
           // 第一次按返回鍵：跳出退出確認，不暫停計時器
           exitC.style.display = "flex";
           canDrop = false; // 避免確認框出現時還能背景拖曳
+          pushLayer(); // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
         } else if (refPage.style.display === "flex" || refPage.style.display === "block") {
           showPage("home");
         }
       }
 
-      // ===== 手機實體返回鍵監聽 =====
-      // 核心策略：頁面載入時推入一個防護狀態，popstate 觸發時立刻補回，
-      // 確保 history 堆疊永遠不會被清空，不管按幾次返回鍵都不會真的離開頁面。
+      // 手機實體返回鍵監聽
       if (isMobile) {
-        history.pushState({ guard: true }, "", location.href);
         window.addEventListener('popstate', (e) => {
-          history.pushState({ guard: true, timestamp: Date.now() }, "", location.href);
           handleBackAction();
         });
       }
@@ -793,12 +796,12 @@
         }
       }
 
-      // ===== 統一 UI 關閉函式（不再透過 history.back 繞道） =====
-      function smartGoHome() { showPage('home'); }
-      function smartCloseRules() { closeRules(); }
-      function smartCloseDetail() { closeDetail(); }
-      function smartCancelExit() { closeExit(); }
-      function smartGameOverHome() { showPage('home'); }
+      // ===== 統一使用 Back 事件來觸發 UI 關閉 =====
+      function smartGoHome() { if (isMobile) history.back(); else showPage('home'); }
+      function smartCloseRules() { if (isMobile) history.back(); else closeRules(); }
+      function smartCloseDetail() { if (isMobile) history.back(); else closeDetail(); }
+      function smartCancelExit() { if (isMobile) history.back(); else closeExit(); }
+      function smartGameOverHome() { if (isMobile) history.back(); else showPage('home'); }
       
       const heartURL = "in-game-UI-images/heart.webp";
       const garbageList = [
@@ -870,6 +873,7 @@
       let pendingGameOver=false;
 
       function showPage(id){
+        if (id !== 'home') pushLayer();
 
         document.querySelectorAll(".page").forEach(p=>p.style.display="none");
         if(id === "home" || id === "reference") {
@@ -905,6 +909,7 @@
       }
       
       function showDetail(name,img,type,desc){
+        pushLayer();
         const mask = document.getElementById("detailMask");
         mask.classList.add("show");
       
@@ -919,6 +924,7 @@
       }
 
       function openRules(){
+        pushLayer();
         rulePage = 0;
         document.getElementById("rulesMask").style.display = "flex";
         renderRules();
@@ -982,6 +988,7 @@
       }
 
       function openExit(){
+        pushLayer(); 
         canDrop = false;
         document.getElementById("exitConfirm").style.display="flex";
       }
@@ -1064,6 +1071,7 @@
       }
       
       function showFeedback(correct){
+        pushLayer();
         document.getElementById("feedback").style.display="block";
         document.getElementById("feedbackMask").style.display="flex";
         
@@ -1090,11 +1098,18 @@
       }
 
       document.getElementById("nextBtn").onclick = function(){
-        delayedAction(() => processFeedbackNext());
+        delayedAction(() => {
+          if (isMobile) {
+            history.back(); 
+          } else {
+            processFeedbackNext();
+          }
+        });
       }
       
       function endGame(){
         clearInterval(timer);
+        pushLayer(); 
         document.getElementById("finalScore").innerText="本次答對 "+score+" 題";
         document.getElementById("gameOver").style.display="flex";
       }
