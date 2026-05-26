@@ -686,8 +686,7 @@
         
         </div>
 
-        <div id="feedbackMask" onclick="if(event.target===this) delayedAction(() => { if(isMobile) history.back();
-else processFeedbackNext(); })">
+        <div id="feedbackMask" onclick="if(event.target===this) delayedAction(() => { if(isMobile) history.back(); else processFeedbackNext(); })">
           <div id="feedback">
             <div id="feedbackFlex">
               <div>
@@ -750,10 +749,10 @@ else processFeedbackNext(); })">
         } else if (rules.style.display === "flex") {
           closeRules();
         } else if (exitC.style.display === "flex") {
-          // 第二次按返回鍵：關閉確認框並恢復遊戲（不再觸發重新計時）
+          // 第二次按返回鍵：關閉確認框並恢復遊戲
           exitC.style.display = "none";
           canDrop = true; // 恢復拖曳功能
-          if (isMobile) history.pushState({ page: "game" }, null, "");
+          pushLayer(); // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
         } else if (feedback.style.display === "flex" || feedback.style.display === "block") {
           processFeedbackNext();
         } else if (gameO.style.display === "flex") {
@@ -762,7 +761,7 @@ else processFeedbackNext(); })">
           // 第一次按返回鍵：跳出退出確認，不暫停計時器
           exitC.style.display = "flex";
           canDrop = false; // 避免確認框出現時還能背景拖曳
-          if (isMobile) history.pushState({ page: "game" }, null, "");
+          pushLayer(); // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
         } else if (refPage.style.display === "flex" || refPage.style.display === "block") {
           showPage("home");
         }
