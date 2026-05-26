@@ -843,6 +843,18 @@
         {name:"鋁門窗外框(不含玻璃)",img:"garbage-image/aluminum-door-and-window-frames.jpg",type:"recycle",desc:"簡易清潔後，交給清潔隊循線回收車。"},
         {name:"雪平鍋",img:"garbage-image/yukihira-pot.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"鋁鍋",img:"garbage-image/aluminum-pot.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
+        {name:"果醬罐",img:"garbage-image/jam-jar.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
+        {name:"橄欖油罐",img:"garbage-image/olive-oil-jar.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
+        {name:"醬料罐",img:"garbage-image/sauce-jar.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
+        {name:"調味罐",img:"garbage-image/seasoning-jar.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
+        {name:"蠟燭玻璃罐(排空)",img:"garbage-image/candle-glass-jar.jpg",type:"recycle",desc:"請排空內容物並妥善包裝防穿破，交給清潔隊循線回收車。"},
+        {name:"玻璃瓶罐",img:"garbage-image/glass-bottle-and-jar.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
+        {name:"化妝品瓶罐",img:"garbage-image/cosmetic-bottle-and-jar.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
+        {name:"玻璃杯碗盤",img:"garbage-image/glass-cup-bowl-plate.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
+        {name:"飲料玻璃瓶",img:"garbage-image/beverage-glass-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
+        {name:"玻璃奶瓶",img:"garbage-image/glass-baby-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
+        {name:"玻璃保鮮盒",img:"garbage-image/glass-food-storage-container.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
+        {name:"香水玻璃瓶",img:"garbage-image/perfume-glass-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         
         {name:"米食",img:"garbage-image/rice-based-food.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         {name:"豆食",img:"garbage-image/soy-based-food.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
@@ -867,6 +879,7 @@
         {name:"汽車擋風玻璃",img:"garbage-image/car-windshield-glass.jpg",type:"other",desc:"為事業廢棄物，請自行委託合法的清除處理業者清運處理。"},
         {name:"白玻璃(優白玻璃、浮式明版玻璃)",img:"garbage-image/ultra-clear-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"魚缸玻璃",img:"garbage-image/fish-tank-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
+        {name:"化學用品罐",img:"garbage-image/chemical-glass-jar.jpg",type:"other",desc:"有骷顱頭、火焰等標示者請務必逆向回收予原製造或購置廠商。"},
       ];
       const rulesImages = [
         "rule-image/rule-page1.png",
@@ -1088,8 +1101,8 @@
         
         document.getElementById("feedbackTitle").innerHTML =
         correct ?
-        "<span style='color:#4fbe41'>正確！</span>" :
-        "<span style='color:red'>錯誤！</span>";
+        "<span style='color:#4fbe41'>正確</span>" :
+        "<span style='color:red'>錯誤</span>";
         document.getElementById("feedbackText").innerHTML =
         `${typeName(current.type)}<br>${current.desc}`;
       }
