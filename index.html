@@ -31,6 +31,10 @@
         overflow:hidden;
         color:#fff;
         user-select:none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
       }
       
       img{
@@ -98,6 +102,15 @@
         justify-content:flex-start;
         align-items:center;
         gap: clamp(24px, 4.5vh, 36px); 
+      }
+      
+      #sourceText{
+        position: absolute;
+        bottom: clamp(16px, 3vh, 24px);
+        width: 100%;
+        text-align: center;
+        font-size: clamp(24px, 4vw, 32px);
+        color: #888;
       }
       
       #title{
@@ -214,7 +227,7 @@
       #itemsPanel::-webkit-scrollbar{ width:20px; }
       #itemsPanel::-webkit-scrollbar-track{ background:transparent; margin-top:22px; margin-bottom:22px; }
       #itemsPanel::-webkit-scrollbar-thumb{ background:#777; border-radius:999px;
-      border:6px solid transparent; background-clip:content-box; }
+      border:6px solid transparent; background-clip:content-box; min-height: 50px; }
       #itemsPanel::-webkit-scrollbar-thumb:active { background: #999; background-clip: content-box;
       }
       
@@ -391,13 +404,13 @@
       /* 規則框 */
       #rulesMask{ position:absolute;
       inset:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:40; }
-      #rulesBox{ width:70%; height:90vh; background:#444; border-radius:18px; display:flex; flex-direction:column; align-items:center;
+      #rulesBox{ width:70%; height:90%; background:#444; border-radius:18px; display:flex; flex-direction:column; align-items:center;
       padding:20px; gap:12px; box-shadow:0 10px 25px rgba(0,0,0,0.6); position: relative; }
       .rulesCloseBtn { position: absolute; top: 20px;
       left: 20px; margin: 0 !important; padding: 10px 18px !important; font-size: clamp(16px, 1.5vw, 20px) !important; min-width: 0 !important; width: auto !important;
       }
       #rulesTitle{ margin:0; font-size: clamp(32px, 3.5vw, 42px); }
-      #rulesImg{ max-height:60vh;
+      #rulesImg{ max-height:60%;
       aspect-ratio: 19 / 10; object-fit:contain; border-radius:12px; flex-shrink:0; }
       #rulesNav{ width:100%; display:flex; justify-content:space-between; align-items:center; margin-top:auto;
       }
@@ -624,6 +637,7 @@
             <button class="menuBtn listBtn" onclick="delayedAction(() => openReference())">分類一覽表</button>
           </div>
         </div>
+        <div id="sourceText">分類依據：桃園市政府環境保護局資源回收教育網</div>
       </div>
       
       <div class="page" id="reference">
