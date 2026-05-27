@@ -780,10 +780,8 @@
           } else if (poppedFrom === 'feedback') {
             // 在feedback框按返回鍵為確認
             processFeedbackNext();
-          } else if (poppedFrom === 'gameOver') {
-            // 在挑戰結束框按返回鍵為回首頁
+          } else if (poppedFrom === 'gameOver' || poppedFrom === 'reference') {
             showPage("home");
-            replaceLayer('home');
           } else if (poppedFrom === 'game') {
             // 在手機版遊戲中按一下返回鍵跳出回首頁的確認框
             openExitUI();
@@ -791,13 +789,6 @@
             // 這樣下一層的返回（取消）才會精準回到 game
             pushLayer('game');
             pushLayer('exit');
-          } else if (poppedFrom === 'reference') {
-            showPage("home");
-            replaceLayer('home');
-          } else if (poppedFrom === 'home') {
-            // 防止連按返回鍵導致白屏，強制將狀態維持在首頁
-            showPage("home");
-            replaceLayer('home');
           }
         });
       }
