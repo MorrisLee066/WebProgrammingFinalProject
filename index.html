@@ -487,7 +487,7 @@
       #landscapeOverlay { display: none;
       }
       
-      /* 加入 pointer: coarse 只針對觸控設備生效 */
+      /* 保留 landscape 的觸控限制，避免電腦縮小視窗誤觸轉向遮罩 */
       @media screen and (max-height: 600px) and (max-width: 1000px) and (orientation: landscape) and (pointer: coarse) {
         #app { display: none !important;
         }
@@ -516,10 +516,9 @@
       }
 
       /* ======================================================= */
-      /* ===== 手機直式原生的響應式版型 ===== */
+      /* ===== 手機直式原生的響應式版型 (移除 pointer:coarse 限制) ===== */
       /* ======================================================= */
-      /* 防呆：加入 pointer:coarse 與 max-width 雙重限制，絕對不讓電腦視窗縮小觸發 */
-      @media screen and (max-width: 1024px) and (orientation: portrait) and (pointer: coarse) {
+      @media screen and (max-width: 1024px) and (orientation: portrait) {
         #app { aspect-ratio: auto;
         width: 100vw; height: 100dvh; overflow: hidden; display: flex; flex-direction: column;
         }
@@ -633,33 +632,46 @@
         #exitBox p { font-size: clamp(18px, 4vw, 28px);
         }
 
-        /* ===== 修改這裡：調整外層與內層的對齊方式，讓框框真正往上移 ===== */
+        /* ===== 修正重點：強制靠上對齊，並縮小圖片高度釋放底部空間 ===== */
         #rulesMask {
-          align-items: flex-start; /* 讓內容靠最上層對齊 */
-          padding-top: 8dvh; /* 距離頂部 8% 的高度，你可以自由增減這個數值 */
+          align-items: flex-start !important; /* 強制覆蓋並靠上對齊 */
+          padding-top: 5dvh !important; /* 讓整個規則框距離頂部只有 5% 視窗高度 */
         }
         
-        #rulesBox { width: 90vw; height: auto; max-height: 85dvh; padding: 24px 16px;
-        justify-content: flex-start; margin-top: 0;}
+        #rulesBox { 
+          width: 90vw; 
+          height: auto; 
+          max-height: 75dvh; /* 縮小最大框架高度 */
+          padding: 24px 16px;
+          justify-content: flex-start; 
+          margin-top: 0 !important;
+        }
         
-        .rulesCloseBtn { top: 12px; left: 12px;
-        padding: 8px 16px !important;
-        font-size: 16px !important;}
+        .rulesCloseBtn { 
+          top: 12px; 
+          left: 12px;
+          padding: 8px 16px !important;
+          font-size: 16px !important;
+        }
         
-        /* ===== 手機版 3:4 直立規則圖設定 ===== */
+        /* ===== 手機版 3:4 直立規則圖縮小設定 ===== */
         #rulesImg { 
           width: 100%;
-          max-height: 65vh; 
-          aspect-ratio: 3 / 4; /* 強制覆蓋為直立比例 */
+          max-height: 44dvh; /* 從 65vh 縮小至 44dvh，讓框架大幅變短，真正達成「往上移」 */
+          aspect-ratio: 3 / 4; 
           object-fit: contain;
-          margin: 10px auto; 
+          margin: 8px auto; 
           display: block; 
         }
         
-        #rulesNav { margin-top: 10px;
+        #rulesNav { 
+          margin-top: 10px;
         }
-        .rulesBtn { font-size: 16px; padding: 12px 0;
-        width: 100px;}
+        .rulesBtn { 
+          font-size: 16px; 
+          padding: 12px 0;
+          width: 100px;
+        }
       }
       
     </style>
@@ -1056,7 +1068,7 @@
         {name:"易拉罐",img:"garbage-image/tin-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"金屬茶葉罐",img:"garbage-image/metal-tea-canister.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"飲料鐵罐",img:"garbage-image/metal-drink-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
-        {name:"餅乾鐵罐",img:"garbage-image/cookie-tin.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
+        {name:"餅乾鐵罐",img:"garbage-image/cookie-tin.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車.。"},
         {name:"鐵罐",img:"garbage-image/metal-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"殺蟲劑罐、殺蟑劑罐",img:"garbage-image/insecticide-spray-can.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
     
@@ -1155,7 +1167,7 @@
         {name:"白玻璃(優白玻璃、浮式明版玻璃)",img:"garbage-image/ultra-clear-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         
         {name:"魚缸玻璃",img:"garbage-image/fish-tank-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
-        {name:"化學用品罐",img:"garbage-image/chemical-glass-jar.jpg",type:"other",desc:"有骷顱頭、火焰等標示者請務必逆向回收予原製造或購置廠商。"},
+        {name:"化學用品罐",img:"garbage-image/chemical-glass-jar.jpg",type:"other",desc:"有骷顱頭、火焰等標示者請務必逆向回收予原製造 or 購置廠商。"},
         {name:"飲水機換裝桶",img:"garbage-image/water-dispenser-refill-bottle.jpg",type:"other",desc:"請交由生產或販賣業者逆向回收。"},
       ];
       // ===== 電腦版橫式規則圖片 =====
