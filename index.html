@@ -48,24 +48,17 @@
         -webkit-user-drag:none;
       }
         
-      /* ===== 桌面端比例穩定性 ===== */
+      /* ===== 桌面端比例穩定性 (強制鎖定 16:9，無視視窗形狀) ===== */
       #app{
         max-width: 1400px;
         min-width: 320px;
         width: 100vw;
-        height: 100vh; 
+        height: auto;
+        max-height: 100vh;
+        aspect-ratio: 16 / 9; /* 電腦版強制維持 16:9 */
         margin:auto;
         position: relative;
         background-color: #222222;
-      }
-      
-      /* 電腦版限定 16:9 控制 */
-      @media screen and (orientation: landscape) {
-        #app {
-          aspect-ratio: 16 / 9;
-          height: auto;
-          max-height: 100vh;
-        }
       }
       
       /* ===== 修復切換頁面時的透明殘影，開啟 GPU 渲染防護 ===== */
@@ -106,7 +99,7 @@
       
       #sourceText{
         position: absolute;
-        bottom: clamp(20px, 4vh, 24px);
+        bottom: clamp(28px, 5vh, 32px);
         width: 100%;
         padding-left: 20px;
         padding-right: 20px;
@@ -227,7 +220,8 @@
         z-index: 2;
       }
       
-      #itemsPanel::-webkit-scrollbar{ width:20px; }
+      #itemsPanel::-webkit-scrollbar{ width:20px;
+      }
       #itemsPanel::-webkit-scrollbar-track{ background:transparent; margin-top:22px; margin-bottom:22px; }
       #itemsPanel::-webkit-scrollbar-thumb{ background:#777; border-radius:999px;
       border:6px solid transparent; background-clip:content-box; min-height: 50px; }
@@ -295,8 +289,8 @@
       }
       
       #lives{ display:flex;
-      gap:8px; min-height: clamp(48px, 10.8vh, 14.4vh); }
-      .life{ width: clamp(48px, 10.8vh, 14.4vh); height: clamp(48px, 10.8vh, 14.4vh);
+      gap:8px; min-height: clamp(57px, 12.9vh, 17.2vh); }
+      .life{ width: clamp(57px, 12.9vh, 17.2vh); height: clamp(57px, 12.9vh, 17.2vh);
       object-fit: contain; }
       
       #timerWrap{ display:flex; align-items:center; gap:10px;
@@ -340,17 +334,22 @@
         overflow: hidden;
       }
       
-      #garbageName{ margin-top:10px; font-size: clamp(26px, 3vw, 33px);
+      #garbageName{ margin-top:10px;
+      font-size: clamp(26px, 3vw, 33px);
       }
       
-      .sideColumn{ width:22%; display:flex; flex-direction:column; gap: clamp(48px, 14vh, 144px);
+      .sideColumn{ width:22%; display:flex; flex-direction:column;
+      gap: clamp(70px, 16vh, 160px);
       align-items:center; }
       
-      .bin{ width:100%; display:flex; justify-content:center; align-items:center; transform: translateY(-3vh); transition: transform 0.15s ease;
+      .bin{ width:100%; display:flex;
+      justify-content:center; align-items:center; transform: translateY(-3vh); transition: transform 0.15s ease;
       }
-      .bin.active{ transform: translateY(-3vh) scale(1.15); }
+      .bin.active{ transform: translateY(-3vh) scale(1.15);
+      }
       .bin img{ width:100%;
-      max-height: clamp(144px, 25.2vh, 230px); object-fit:contain; }
+      max-height: clamp(144px, 25.2vh, 230px); object-fit:contain;
+      }
       
       /* ===== 一般與資源回收圖示設定 6px 圓角 ===== */
       .bin[data-type="general"] img,
@@ -414,7 +413,7 @@
       }
       #rulesTitle{ margin:0; font-size: clamp(32px, 3.5vw, 42px); }
       #rulesImg{ max-height:60%;
-      aspect-ratio: 19 / 10; object-fit:contain; border-radius:12px; flex-shrink:0; }
+      aspect-ratio: 19 / 10; object-fit:contain; border-radius:12px; flex-shrink:0; display: block; margin: auto; }
       #rulesNav{ width:100%; display:flex; justify-content:space-between; align-items:center; margin-top:auto;
       }
       .rulesBtn{ margin:18px 0 0 0; display:block; padding:14px 0; font-size: clamp(20px, 2vw, 24px);
@@ -455,6 +454,27 @@
       }
 
       /* ======================================================= */
+      /* 電腦版專屬：解決 F11 全螢幕時的跑版與遮罩漏邊問題       */
+      /* ======================================================= */
+      @media screen and (min-width: 769px) {
+        /* 讓所有遮罩完全固定於最外層 viewport，徹底解決 F11 漏邊 */
+        #detailMask, #feedbackMask, #gameOver, #exitConfirm, #rulesMask {
+          position: fixed !important;
+          inset: 0 !important;
+          width: 100vw !important;
+          height: 100vh !important;
+        }
+        
+        /* 將垂直定位由 vh 改為 %，確保綁定在 16:9 容器內防止高度重疊 */
+        #questionNumber { top: 2% !important; }
+        #topBar { top: 10% !important; }
+        #bottomArea { bottom: 8% !important; }
+        
+        /* 電腦版 bins 間距 */
+        .sideColumn { gap: clamp(70px, 16vh, 160px) !important; } 
+      }
+
+      /* ======================================================= */
       /* ===== 手機強制轉向遮罩 (純 SVG 確保 100% 顯示) ======= */
       /* ======================================================= */
       #landscapeOverlay { display: none;
@@ -491,7 +511,8 @@
       /* ======================================================= */
       /* ===== 手機直式原生的響應式版型 ===== */
       /* ======================================================= */
-      @media screen and (orientation: portrait) {
+      /* 防呆：加入 pointer:coarse 與 max-width 雙重限制，絕對不讓電腦視窗縮小觸發 */
+      @media screen and (max-width: 1024px) and (orientation: portrait) and (pointer: coarse) {
         #app { aspect-ratio: auto;
         width: 100vw; height: 100dvh; overflow: hidden; display: flex; flex-direction: column;
         }
@@ -609,8 +630,17 @@
         justify-content: center; }
         .rulesCloseBtn { top: 12px; left: 12px; padding: 8px 16px !important;
         font-size: 16px !important;}
-        #rulesImg { width: 100%; max-height: 45vh; object-fit: contain;
-        margin: 10px auto; }
+        
+        /* ===== 手機版 3:4 直立規則圖設定 ===== */
+        #rulesImg { 
+          width: 100%; 
+          max-height: 65vh; 
+          aspect-ratio: 3 / 4; /* 強制覆蓋為直立比例 */
+          object-fit: contain;
+          margin: 10px auto; 
+          display: block; 
+        }
+        
         #rulesNav { margin-top: 10px;
         }
         .rulesBtn { font-size: 16px; padding: 12px 0;
@@ -764,7 +794,6 @@
       // ===== 主動式 History 狀態層次管理 (完美版) =====
       // ==========================================
       let currentState = 'home';
-
       function pushLayer(stateName) {
         if (isMobile) {
           history.pushState({ name: stateName }, "", location.href);
@@ -782,7 +811,6 @@
       if (isMobile) {
         // 初始化首頁狀態
         history.replaceState({ name: 'home' }, "", location.href);
-
         window.addEventListener('popstate', (e) => {
           const poppedFrom = currentState;
           currentState = e.state ? e.state.name : 'home';
@@ -907,12 +935,18 @@
       }
 
       // ===== 按鈕綁定的動作函式 (統合 History 與 UI) =====
-      function smartGoHome() { if (isMobile) history.back(); else showPage('home'); }
-      function smartCloseRules() { if (isMobile) history.back(); else closeRulesUI(); }
-      function smartCloseDetail() { if (isMobile) history.back(); else closeDetailUI(); }
-      function smartCancelExit() { if (isMobile) history.back(); else closeExitUI(); }
-      function smartGameOverHome() { if (isMobile) history.back(); else showPage('home'); }
-      function smartNextFeedback() { if (isMobile) history.back(); else processFeedbackNext(); }
+      function smartGoHome() { if (isMobile) history.back();
+      else showPage('home'); }
+      function smartCloseRules() { if (isMobile) history.back(); else closeRulesUI();
+      }
+      function smartCloseDetail() { if (isMobile) history.back(); else closeDetailUI();
+      }
+      function smartCancelExit() { if (isMobile) history.back(); else closeExitUI();
+      }
+      function smartGameOverHome() { if (isMobile) history.back(); else showPage('home');
+      }
+      function smartNextFeedback() { if (isMobile) history.back(); else processFeedbackNext();
+      }
 
       function openReference() {
         if (isMobile) pushLayer('reference');
@@ -953,7 +987,8 @@
         lives = 5;
         score = 0;
         totalQ = 0;
-        recentImages = []; // 重置記憶題庫
+        recentImages = [];
+        // 重置記憶題庫
         showPage("gamePage");
         renderLives();
         nextQuestion();
@@ -1080,12 +1115,23 @@
         {name:"化學用品罐",img:"garbage-image/chemical-glass-jar.jpg",type:"other",desc:"有骷顱頭、火焰等標示者請務必逆向回收予原製造或購置廠商。"},
         {name:"飲水機換裝桶",img:"garbage-image/water-dispenser-refill-bottle.jpg",type:"other",desc:"請交由生產或販賣業者逆向回收。"},
       ];
+      
+      // ===== 電腦版橫式規則圖片 =====
       const rulesImages = [
         "rule-image/rule-page1.png",
         "rule-image/rule-page2.png",
         "rule-image/rule-page3.png",
         "rule-image/rule-page4.png"
       ];
+      
+      // ===== 新增：手機版直式規則圖片 =====
+      const rulesImagesMobile = [
+        "rule-image/rule-page1-mobile.png",
+        "rule-image/rule-page2-mobile.png",
+        "rule-image/rule-page3-mobile.png",
+        "rule-image/rule-page4-mobile.png"
+      ];
+      
       let rulePage = 0;
       let lives,score,totalQ,current,timeLimit,endTime,timer;
       let canDrop=false;
@@ -1113,7 +1159,10 @@
       }
       
       function renderRules(){
-        document.getElementById("rulesImg").src = rulesImages[rulePage];
+        // 依據是否為手機裝置，來決定使用哪一組圖片陣列
+        const currentImages = isMobile ? rulesImagesMobile : rulesImages;
+        
+        document.getElementById("rulesImg").src = currentImages[rulePage];
         const nav = document.getElementById("rulesNav");
         nav.innerHTML = "";
       
@@ -1131,14 +1180,14 @@
         nav.appendChild(prevBtn);
       
         const pageIndicator = document.createElement("div");
-        pageIndicator.innerText = `${rulePage + 1}/${rulesImages.length}`;
+        pageIndicator.innerText = `${rulePage + 1}/${currentImages.length}`;
         pageIndicator.style.fontSize = "clamp(18px, 2vw, 24px)";
         pageIndicator.style.fontWeight = "bold";
         nav.appendChild(pageIndicator);
       
         const nextBtn = document.createElement("button");
         nextBtn.className = "rulesBtn";
-        if (rulePage < rulesImages.length - 1) {
+        if (rulePage < currentImages.length - 1) {
           nextBtn.innerText = "下一頁";
           nextBtn.onclick = () => delayedAction(() => {
             rulePage++;
@@ -1167,7 +1216,6 @@
         timeLimit=10-Math.floor((totalQ-1)/5)*2;
         if(timeLimit<4) timeLimit=4;
         
-        // 實作防重複機制 (最近 10 題不會出現相同的圖片)
         let availableGarbage = garbageList.filter(item => !recentImages.includes(item.img));
         if (availableGarbage.length === 0) {
             availableGarbage = garbageList;
@@ -1211,7 +1259,6 @@
         canDrop=false;
         clearInterval(timer);
         
-        // 安全機制：如果在確認離開的畫面剛好超時，強制關閉確認框以顯示回饋
         document.getElementById("exitConfirm").style.display = "none";
         if(timeout){
           document.getElementById("timerFill").style.width="0%";
@@ -1385,7 +1432,6 @@
         document.querySelectorAll(".bin").forEach(b => b.classList.remove("active"));
       });
       
-      // 確保一開始就顯示首頁
       showPage("home");
       
     </script>
