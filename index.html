@@ -211,7 +211,6 @@
         z-index: 2;
       }
       
-      /* ===== 復原 Scroll Bar 設定 ===== */
       #itemsPanel::-webkit-scrollbar{ width:20px; }
       #itemsPanel::-webkit-scrollbar-track{ background:transparent; margin-top:22px; margin-bottom:22px; }
       #itemsPanel::-webkit-scrollbar-thumb{ background:#777; border-radius:999px;
@@ -308,7 +307,6 @@
       #centerGarbage{ width:30%; text-align:center;
       }
       
-      /* ===== 強化電腦版圓角設定 ===== */
       #garbage {
         width: clamp(156px, 26vh, 216px);
         height: clamp(156px, 26vh, 216px);
@@ -316,7 +314,7 @@
         -webkit-user-drag: element; /* 允許電腦版拖曳 */
         transition: transform 0.2s ease;
         border-radius: 8px; 
-        background-color: transparent; /* 確保沒有奇怪的背景色 */
+        background-color: transparent; 
       }
       
       /* 殘影專屬圓角與防變形 */
@@ -331,15 +329,25 @@
       
       .sideColumn{ width:22%; display:flex; flex-direction:column; gap: clamp(48px, 14vh, 144px);
       align-items:center; }
+      
       .bin{ width:100%; display:flex; justify-content:center; align-items:center; transform: translateY(-3vh); transition: transform 0.15s ease;
       }
       .bin.active{ transform: translateY(-3vh) scale(1.15); }
       .bin img{ width:100%;
-      max-height: clamp(120px, 21vh, 192px); object-fit:contain; }
+      max-height: clamp(144px, 25.2vh, 230px); object-fit:contain; }
+      
+      /* ===== 一般與資源回收圖示設定 6px 圓角 ===== */
+      .bin[data-type="general"] img,
+      .bin[data-type="recycle"] img {
+        border-radius: 6px;
+        background-color: #222222;
+        width: auto !important;
+      }
+
       .otherBox{
-        width: clamp(108px, 16vh, 144px);
-        height: clamp(132px, 21vh, 192px);
-        background:#444; border-radius:16px; display:flex; justify-content:center; align-items:center; font-size: clamp(28px, 3.6vw, 38px);
+        width: clamp(130px, 19.2vh, 173px);
+        height: clamp(158px, 25.2vh, 230px);
+        background:#444; border-radius:16px; display:flex; justify-content:center; align-items:center; font-size: clamp(34px, 4.3vw, 46px);
       }
       
       /* 回饋 */
@@ -430,14 +438,13 @@
         color:#fff; border-radius:18px; position:relative; overflow:hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.55);
       }
 
-
       /* ======================================================= */
       /* ===== 手機強制轉向遮罩 (純 SVG 確保 100% 顯示) ======= */
       /* ======================================================= */
       #landscapeOverlay { display: none;
       }
       
-      /* 加入 pointer: coarse 只針對觸控設備(手機平板)生效，避免電腦版縮放誤觸 */
+      /* 加入 pointer: coarse 只針對觸控設備生效 */
       @media screen and (max-height: 600px) and (max-width: 1000px) and (orientation: landscape) and (pointer: coarse) {
         #app { display: none !important;
         }
@@ -614,7 +621,7 @@
           <div id="homeBottom">
             <button class="menuBtn startBtn" onclick="delayedAction(() => startGame())">開始</button>
             <button class="menuBtn" onclick="delayedAction(() => openRules())">規則</button>
-            <button class="menuBtn listBtn" onclick="delayedAction(() => showPage('reference'))">分類一覽表</button>
+            <button class="menuBtn listBtn" onclick="delayedAction(() => openReference())">分類一覽表</button>
           </div>
         </div>
       </div>
@@ -683,7 +690,7 @@
           </div>
         
           <div id="centerGarbage">
-            <img id="garbage" draggable="true" src="" style="border-radius: 8px;">
+            <img id="garbage" draggable="true" src="">
             <div id="garbageName"></div>
           </div>
         
@@ -694,7 +701,7 @@
         
         </div>
 
-        <div id="feedbackMask" onclick="if(event.target===this) delayedAction(() => { if(isMobile) history.back(); else processFeedbackNext(); })">
+        <div id="feedbackMask" onclick="if(event.target===this) delayedAction(() => smartNextFeedback())">
           <div id="feedback">
             <div id="feedbackFlex">
               <div>
@@ -707,7 +714,7 @@
                 <div id="feedbackText"></div>
               </div>
             </div>
-            <button id="nextBtn">確認</button>
+            <button id="nextBtn" onclick="delayedAction(() => smartNextFeedback())">確認</button>
           </div>
         </div>
       
@@ -736,58 +743,86 @@
       document.body.addEventListener('touchstart', function() {}, {passive: true});
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 0);
       
-      // ===== 主動式 History 狀態層次管理 =====
-      function pushLayer() {
-        if (isMobile) history.pushState({ timestamp: Date.now() }, "", location.href);
-      }
+      // ==========================================
+      // ===== 主動式 History 狀態層次管理 (完美版) =====
+      // ==========================================
+      let currentState = 'home';
 
-      // ===== 統一的返回(剝除層次)處理邏輯 =====
-      function handleBackAction() {
-        const detail = document.getElementById("detailMask");
-        const rules = document.getElementById("rulesMask");
-        const exitC = document.getElementById("exitConfirm");
-        const feedback = document.getElementById("feedbackMask");
-        const gameO = document.getElementById("gameOver");
-        const gamePage = document.getElementById("gamePage");
-        const refPage = document.getElementById("reference");
-    
-        // 嚴格依序判斷當前處於最頂層的視窗並關閉
-        if (detail.classList.contains("show")) {
-          closeDetail();
-        } else if (rules.style.display === "flex") {
-          closeRules();
-        } else if (exitC.style.display === "flex") {
-          // 第二次按返回鍵：關閉確認框並恢復遊戲
-          exitC.style.display = "none";
-          canDrop = true; // 恢復拖曳功能
-          pushLayer(); // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
-        } else if (feedback.style.display === "flex" || feedback.style.display === "block") {
-          processFeedbackNext();
-        } else if (gameO.style.display === "flex") {
-          showPage("home");
-        } else if (gamePage.style.display === "flex" || gamePage.style.display === "block") {
-          // 第一次按返回鍵：跳出退出確認，不暫停計時器
-          exitC.style.display = "flex";
-          canDrop = false; // 避免確認框出現時還能背景拖曳
-          pushLayer(); // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
-        } else if (refPage.style.display === "flex" || refPage.style.display === "block") {
-          showPage("home");
+      function pushLayer(stateName) {
+        if (isMobile) {
+          history.pushState({ name: stateName }, "", location.href);
+          currentState = stateName;
         }
       }
 
-      // 手機實體返回鍵監聽
+      function replaceLayer(stateName) {
+        if (isMobile) {
+          history.replaceState({ name: stateName }, "", location.href);
+          currentState = stateName;
+        }
+      }
+
       if (isMobile) {
+        // 初始化首頁狀態
+        history.replaceState({ name: 'home' }, "", location.href);
+
         window.addEventListener('popstate', (e) => {
-          handleBackAction();
+          const poppedFrom = currentState;
+          currentState = e.state ? e.state.name : 'home';
+
+          if (poppedFrom === 'detail') {
+            closeDetailUI();
+          } else if (poppedFrom === 'rules') {
+            closeRulesUI();
+          } else if (poppedFrom === 'exit') {
+            // 在確認框按返回鍵為取消
+            closeExitUI();
+          } else if (poppedFrom === 'feedback') {
+            // 在feedback框按返回鍵為確認
+            processFeedbackNext();
+          } else if (poppedFrom === 'gameOver') {
+            // 在挑戰結束框按返回鍵為回首頁
+            showPage("home");
+            replaceLayer('home');
+          } else if (poppedFrom === 'game') {
+            // 在手機版遊戲中按一下返回鍵跳出回首頁的確認框
+            openExitUI();
+            // 由於 popstate 把 game 給彈出了，我們必須將 game 補回去，然後再推入 exit
+            // 這樣下一層的返回（取消）才會精準回到 game
+            pushLayer('game');
+            pushLayer('exit');
+          } else if (poppedFrom === 'reference') {
+            showPage("home");
+            replaceLayer('home');
+          } else if (poppedFrom === 'home') {
+            // 防止連按返回鍵導致白屏，強制將狀態維持在首頁
+            showPage("home");
+            replaceLayer('home');
+          }
         });
       }
 
-      // 電腦版 Esc 鍵監聽
+      // ===== 電腦版 Esc 鍵監聽 (不依賴 History API，手動關閉) =====
       window.addEventListener('keydown', (e) => {
         if (!isMobile && (e.key === "Escape" || e.key === "Esc")) {
-          handleBackAction();
+          const detail = document.getElementById("detailMask");
+          const rules = document.getElementById("rulesMask");
+          const exitC = document.getElementById("exitConfirm");
+          const feedback = document.getElementById("feedbackMask");
+          const gameO = document.getElementById("gameOver");
+          const gamePage = document.getElementById("gamePage");
+          const refPage = document.getElementById("reference");
+
+          if (detail.classList.contains("show")) closeDetailUI();
+          else if (rules.style.display === "flex") closeRulesUI();
+          else if (exitC.style.display === "flex") closeExitUI();
+          else if (feedback.style.display === "flex" || feedback.style.display === "block") processFeedbackNext();
+          else if (gameO.style.display === "flex") showPage("home");
+          else if (gamePage.style.display === "block" || gamePage.style.display === "flex") openExitUI();
+          else if (refPage.style.display === "block" || refPage.style.display === "flex") showPage("home");
         }
       });
+
       // ===== 按鈕點擊延遲系統 (修改為100毫秒) =====
       let isActionPending = false;
       function delayedAction(callback) {
@@ -803,18 +838,122 @@
         }
       }
 
-      // ===== 統一使用 Back 事件來觸發 UI 關閉 =====
-      function smartGoHome() { if (isMobile) history.back();
-      else showPage('home'); }
-      function smartCloseRules() { if (isMobile) history.back(); else closeRules();
+      // ===== 獨立的 UI 顯示/關閉函式 =====
+      function showPage(id) {
+        document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+        if(id === "home" || id === "reference") {
+          document.getElementById(id).style.display="flex";
+        } else {
+          document.getElementById(id).style.display="block";
+        }
+        if(id==="reference"){
+          changeCategory("general",document.querySelector(".tabBtn"));
+        }
       }
-      function smartCloseDetail() { if (isMobile) history.back(); else closeDetail();
+
+      function openExitUI() {
+        canDrop = false;
+        document.getElementById("exitConfirm").style.display="flex";
       }
-      function smartCancelExit() { if (isMobile) history.back(); else closeExit();
+      function closeExitUI() {
+        document.getElementById("exitConfirm").style.display="none";
+        canDrop = true;
       }
-      function smartGameOverHome() { if (isMobile) history.back(); else showPage('home');
+      function openRulesUI() {
+        rulePage = 0;
+        document.getElementById("rulesMask").style.display = "flex";
+        renderRules();
+      }
+      function closeRulesUI() {
+        document.getElementById("rulesMask").style.display = "none";
+      }
+      function showDetailUI(name, img, type, desc) {
+        const mask = document.getElementById("detailMask");
+        mask.classList.add("show");
+        document.getElementById("detailImg").src = img;
+        document.getElementById("detailName").innerText = name;
+        document.getElementById("detailType").innerText = type;
+        document.getElementById("detailDesc").innerText = desc;
+      }
+      function closeDetailUI() {
+        document.getElementById("detailMask").classList.remove("show");
+      }
+      function showFeedbackUI(correct) {
+        document.getElementById("feedback").style.display="block";
+        document.getElementById("feedbackMask").style.display="flex";
+        document.getElementById("feedbackImg").src = current.img;
+        document.getElementById("feedbackItemName").innerText = current.name;
+        document.getElementById("feedbackTitle").innerHTML = correct ? "<span style='color:#4fbe41'>正確</span>" : "<span style='color:red'>錯誤</span>";
+        document.getElementById("feedbackText").innerHTML = `${typeName(current.type)}<br>${current.desc}`;
+      }
+      function endGameUI() {
+        document.getElementById("finalScore").innerText="本次答對 "+score+" 題";
+        document.getElementById("gameOver").style.display="flex";
+      }
+      function closeAllMasks() {
+        document.getElementById("feedbackMask").style.display="none";
+        document.getElementById("exitConfirm").style.display="none";
+        document.getElementById("gameOver").style.display="none";
+        document.getElementById("rulesMask").style.display="none";
+        document.getElementById("detailMask").classList.remove("show");
+      }
+
+      // ===== 按鈕綁定的動作函式 (統合 History 與 UI) =====
+      function smartGoHome() { if (isMobile) history.back(); else showPage('home'); }
+      function smartCloseRules() { if (isMobile) history.back(); else closeRulesUI(); }
+      function smartCloseDetail() { if (isMobile) history.back(); else closeDetailUI(); }
+      function smartCancelExit() { if (isMobile) history.back(); else closeExitUI(); }
+      function smartGameOverHome() { if (isMobile) history.back(); else showPage('home'); }
+      function smartNextFeedback() { if (isMobile) history.back(); else processFeedbackNext(); }
+
+      function openReference() {
+        if (isMobile) pushLayer('reference');
+        showPage('reference');
+      }
+      function openRules() {
+        if (isMobile) pushLayer('rules');
+        openRulesUI();
+      }
+      function showDetail(name, img, type, desc) {
+        if (isMobile) pushLayer('detail');
+        showDetailUI(name, img, type, desc);
+      }
+      function openExit() {
+        if (isMobile) pushLayer('exit');
+        openExitUI();
+      }
+      function exitGame() {
+        closeExitUI();
+        showPage("home");
+        if (isMobile) replaceLayer('home');
+      }
+      function showFeedback(correct) {
+        if (isMobile) pushLayer('feedback');
+        showFeedbackUI(correct);
+      }
+      function endGame() {
+        clearInterval(timer);
+        if (isMobile) pushLayer('gameOver');
+        endGameUI();
+      }
+      function startGame() {
+        closeAllMasks();
+        if (isMobile) pushLayer('game'); // 確保遊戲開始時帶有一層狀態
+        canDrop = true;
+        dragging = false;
+        pendingGameOver = false;
+        lives = 5;
+        score = 0;
+        totalQ = 0;
+        recentImages = []; // 重置記憶題庫
+        showPage("gamePage");
+        renderLives();
+        nextQuestion();
       }
       
+      // ==========================================
+      // ===== 遊戲資料與核心邏輯 =====
+      // ==========================================
       const heartURL = "in-game-UI-images/heart.webp";
       const garbageList = [
         {name:"衛生紙",img:"garbage-image/tissue.png",type:"general",desc:"妥善裝袋後交給循線垃圾車。"},
@@ -926,23 +1065,8 @@
       let canDrop=false;
       let dragging=false;
       let pendingGameOver=false;
-      // ===== 新增：記錄最近出過的題目圖片，用於防重複 =====
       let recentImages = [];
-      function showPage(id){
-        if (id !== 'home') pushLayer();
 
-        document.querySelectorAll(".page").forEach(p=>p.style.display="none");
-        if(id === "home" || id === "reference") {
-          document.getElementById(id).style.display="flex";
-        } else {
-          document.getElementById(id).style.display="block";
-        }
-        
-        if(id==="reference"){
-          changeCategory("general",document.querySelector(".tabBtn"));
-        }
-      }
-      showPage("home");
       function changeCategory(type,btn){
         document.querySelectorAll(".tabBtn").forEach(t=>{
           t.classList.remove("active");
@@ -950,7 +1074,6 @@
         btn.classList.add("active");
         
         let html="";
-        
         garbageList.filter(item=>item.type===type).forEach(item=>{
           html += `
           <div class="itemCard"
@@ -961,32 +1084,6 @@
         });
         document.getElementById("itemsGrid").innerHTML=html;
         document.getElementById("itemsPanel").scrollTop = 0;
-      }
-      
-      function showDetail(name,img,type,desc){
-        pushLayer();
-        const mask = document.getElementById("detailMask");
-        mask.classList.add("show");
-      
-        document.getElementById("detailImg").src = img;
-        document.getElementById("detailName").innerText = name;
-        document.getElementById("detailType").innerText = type;
-        document.getElementById("detailDesc").innerText = desc;
-      }
-      
-      function closeDetail(){
-        document.getElementById("detailMask").classList.remove("show");
-      }
-
-      function openRules(){
-        pushLayer();
-        rulePage = 0;
-        document.getElementById("rulesMask").style.display = "flex";
-        renderRules();
-      }
-      
-      function closeRules(){
-        document.getElementById("rulesMask").style.display = "none";
       }
       
       function renderRules(){
@@ -1028,42 +1125,6 @@
         nav.appendChild(nextBtn);
       }
       
-      function startGame(){
-        closeAllMasks();
-        // ===== 【核心修正】：塞入「歷史紀錄緩衝墊 (Buffer State)」 =====
-        // 這樣可以保證玩家就算在遊戲內連點兩次返回鍵，也只是吃掉這個緩衝區，而不會跳出網頁
-        if (isMobile) history.pushState({ buffer: true }, "", location.href);
-        canDrop = true;
-        dragging = false;
-        pendingGameOver = false;
-        lives=5;
-        score=0;
-        totalQ=0;
-        recentImages = [];
-        // 新遊戲重置記憶題庫
-        
-        document.getElementById("gameOver").style.display="none";
-        showPage("gamePage");
-        renderLives();
-        nextQuestion();
-      }
-
-      function openExit(){
-        pushLayer(); 
-        canDrop = false;
-        document.getElementById("exitConfirm").style.display="flex";
-      }
-      
-      function closeExit(){
-        document.getElementById("exitConfirm").style.display="none";
-        canDrop = true;
-      }
-      
-      function exitGame(){
-        closeExit();
-        showPage("home");
-      }
-      
       function renderLives(){
         let html="";
         for(let i=0;i<lives;i++){
@@ -1080,22 +1141,17 @@
         timeLimit=10-Math.floor((totalQ-1)/5)*2;
         if(timeLimit<4) timeLimit=4;
         
-        // ===== 實作防重複機制 (最近 10 題不會出現相同的圖片) =====
+        // 實作防重複機制 (最近 10 題不會出現相同的圖片)
         let availableGarbage = garbageList.filter(item => !recentImages.includes(item.img));
-        // 防呆機制：如果真的全部都被抽光了（通常不會，因為題庫有 80 幾題），就開放全部題庫
         if (availableGarbage.length === 0) {
             availableGarbage = garbageList;
         }
         
-        // 從過濾後的題庫中隨機抽題
         current = availableGarbage[Math.floor(Math.random() * availableGarbage.length)];
-        // 將剛抽出的題目加入近期記憶中
         recentImages.push(current.img);
-        // 若記憶超過 10 題，就把最舊的那一題忘掉，讓它有機會再次出現
         if (recentImages.length > 10) {
             recentImages.shift();
         }
-        // =======================================================
         
         document.getElementById("garbage").src=current.img;
         document.getElementById("garbageName").innerText=current.name;
@@ -1121,8 +1177,7 @@
           
           let percent=remain/(timeLimit*1000)*100;
           document.getElementById("timerFill").style.width=percent+"%";
-   
-        document.getElementById("timerText").innerText = "倒數計時：" + (remain / 1000).toFixed(1);
+          document.getElementById("timerText").innerText = "倒數計時：" + (remain / 1000).toFixed(1);
         },20);
       }
       
@@ -1146,22 +1201,6 @@
         showFeedback(false);
       }
       
-      function showFeedback(correct){
-        pushLayer();
-        document.getElementById("feedback").style.display="block";
-        document.getElementById("feedbackMask").style.display="flex";
-        
-        document.getElementById("feedbackImg").src = current.img;
-        document.getElementById("feedbackItemName").innerText = current.name;
-        
-        document.getElementById("feedbackTitle").innerHTML =
-        correct ?
-        "<span style='color:#4fbe41'>正確</span>" :
-        "<span style='color:red'>錯誤</span>";
-        document.getElementById("feedbackText").innerHTML =
-        `${typeName(current.type)}<br>${current.desc}`;
-      }
-      
       function processFeedbackNext() {
         document.getElementById("feedback").style.display="none";
         document.getElementById("feedbackMask").style.display="none";
@@ -1171,23 +1210,6 @@
         }else{
           nextQuestion();
         }
-      }
-
-      document.getElementById("nextBtn").onclick = function(){
-        delayedAction(() => {
-          if (isMobile) {
-            history.back(); 
-          } else {
-            processFeedbackNext();
-          }
-        });
-      }
-      
-      function endGame(){
-        clearInterval(timer);
-        pushLayer(); 
-        document.getElementById("finalScore").innerText="本次答對 "+score+" 題";
-        document.getElementById("gameOver").style.display="flex";
       }
       
       function typeName(type){
@@ -1218,7 +1240,6 @@
         });
       
         bin.addEventListener("dragleave", () => {
-  
           bin.classList.remove("active");
         });
         
@@ -1228,17 +1249,14 @@
           
           if (!canDrop || !dragging) return;
           
-         
           dragging = false;
           canDrop = false;
           clearInterval(timer);
           
           let user = bin.dataset.type;
-          
           if (user === current.type) {
             score++;
             showFeedback(true);
-    
           } else {
             wrongAnswer(false);
           }
@@ -1251,16 +1269,14 @@
         if (!canDrop) return;
         dragging = true;
         
-        // 強制阻止手機預設的圖片長按選單與原生拖曳 (防止殘影中斷)
         if (e.cancelable) e.preventDefault();
         
         let touch = e.touches[0];
         let app = document.getElementById("app");
         
-        // 解決高壓縮 JPG 造成的殘影隱形 Bug，改用 createElement 重新生成標籤
         touchGhost = document.createElement("img");
         touchGhost.src = garbage.src;
-        touchGhost.classList.add("touch-ghost"); // 掛上 CSS class 套用圓角
+        touchGhost.classList.add("touch-ghost"); 
         
         touchGhost.style.position = "absolute"; 
         touchGhost.style.pointerEvents = "none";
@@ -1298,7 +1314,6 @@
         if (target) {
           let bin = target.closest(".bin");
           if (bin && canDrop) {
-         
             bin.classList.add("active");
           }
         }
@@ -1344,13 +1359,9 @@
         document.querySelectorAll(".bin").forEach(b => b.classList.remove("active"));
       });
       
-      function closeAllMasks(){
-        document.getElementById("feedbackMask").style.display="none";
-        document.getElementById("exitConfirm").style.display="none";
-        document.getElementById("gameOver").style.display="none";
-        document.getElementById("rulesMask").style.display="none";
-        document.getElementById("detailMask").classList.remove("show");
-      }
+      // 確保一開始就顯示首頁
+      showPage("home");
+      
     </script>
     
   </body>
