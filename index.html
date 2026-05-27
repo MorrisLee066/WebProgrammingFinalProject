@@ -55,7 +55,8 @@
         width: 100vw;
         height: auto;
         max-height: 100vh;
-        aspect-ratio: 16 / 9; /* 電腦版強制維持 16:9 */
+        aspect-ratio: 16 / 9;
+        /* 電腦版強制維持 16:9 */
         margin:auto;
         position: relative;
         background-color: #222222;
@@ -414,9 +415,11 @@
       #rulesTitle{ margin:0; font-size: clamp(32px, 3.5vw, 42px); }
       #rulesImg{ max-height:60%;
       aspect-ratio: 19 / 10; object-fit:contain; border-radius:12px; flex-shrink:0; display: block; margin: auto; }
-      #rulesNav{ width:100%; display:flex; justify-content:space-between; align-items:center; margin-top:auto;
+      #rulesNav{ width:100%; display:flex;
+      justify-content:space-between; align-items:center; margin-top:auto;
       }
-      .rulesBtn{ margin:18px 0 0 0; display:block; padding:14px 0; font-size: clamp(20px, 2vw, 24px);
+      .rulesBtn{ margin:18px 0 0 0; display:block; padding:14px 0;
+      font-size: clamp(20px, 2vw, 24px);
       width: clamp(120px, 15vw, 160px); border:none; border-radius:12px; background:#837f7f; color:#fff; text-align: center;
       }
       
@@ -466,12 +469,16 @@
         }
         
         /* 將垂直定位由 vh 改為 %，確保綁定在 16:9 容器內防止高度重疊 */
-        #questionNumber { top: 2% !important; }
-        #topBar { top: 10% !important; }
-        #bottomArea { bottom: 8% !important; }
+        #questionNumber { top: 2% !important;
+        }
+        #topBar { top: 10% !important;
+        }
+        #bottomArea { bottom: 8% !important;
+        }
         
         /* 電腦版 bins 間距 */
-        .sideColumn { gap: clamp(70px, 16vh, 160px) !important; } 
+        .sideColumn { gap: clamp(70px, 16vh, 160px) !important;
+        } 
       }
 
       /* ======================================================= */
@@ -626,14 +633,22 @@
         #exitBox p { font-size: clamp(18px, 4vw, 28px);
         }
 
+        /* ===== 修改這裡：調整外層與內層的對齊方式，讓框框真正往上移 ===== */
+        #rulesMask {
+          align-items: flex-start; /* 讓內容靠最上層對齊 */
+          padding-top: 8dvh; /* 距離頂部 8% 的高度，你可以自由增減這個數值 */
+        }
+        
         #rulesBox { width: 90vw; height: auto; max-height: 85dvh; padding: 24px 16px;
-        justify-content: flex-start; }
-        .rulesCloseBtn { top: 12px; left: 12px; padding: 8px 16px !important;
+        justify-content: flex-start; margin-top: 0;}
+        
+        .rulesCloseBtn { top: 12px; left: 12px;
+        padding: 8px 16px !important;
         font-size: 16px !important;}
         
         /* ===== 手機版 3:4 直立規則圖設定 ===== */
         #rulesImg { 
-          width: 100%; 
+          width: 100%;
           max-height: 65vh; 
           aspect-ratio: 3 / 4; /* 強制覆蓋為直立比例 */
           object-fit: contain;
@@ -661,6 +676,7 @@
 
     <div id="app">
       
+ 
       <div class="page" id="home">
         <div id="homeContainer">
           <div id="title">垃圾分類挑戰</div>
@@ -669,6 +685,7 @@
             <button class="menuBtn" onclick="delayedAction(() => openRules())">規則</button>
             <button class="menuBtn listBtn" onclick="delayedAction(() => openReference())">分類一覽表</button>
           </div>
+  
         </div>
         <div id="sourceText">分類依據：桃園市政府環境保護局資源回收教育網</div>
       </div>
@@ -680,13 +697,15 @@
           <div id="refTitle">分類一覽表</div>
           <div id="refWrap">
             <div id="categoryTabs">
+ 
               <button class="tabBtn active" onclick="changeCategory('general',this)">一般垃圾</button>
               <button class="tabBtn" onclick="changeCategory('recycle',this)">資源回收</button>
               <button class="tabBtn" onclick="changeCategory('food',this)">廚餘回收</button>
               <button class="tabBtn" onclick="changeCategory('other',this)">其他</button>
             </div>
             <div id="itemsPanel">
-              <div id="itemsGrid"></div>
+           
+               <div id="itemsGrid"></div>
             </div>
           </div>
         </div>
@@ -695,14 +714,16 @@
           <div id="detailBox">
             <div id="detailFlex">
               <img id="detailImg" src="">
-              <div id="detailText">
+             
+               <div id="detailText">
                 <h2 id="detailName"></h2>
                 <p id="detailType"></p>
                 <p id="detailDesc"></p>
               </div>
             </div>
             <button id="detailClose" onclick="delayedAction(() => smartCloseDetail())">確定</button>
-          </div>
+     
+           </div>
         </div>
       </div>
       
@@ -712,6 +733,7 @@
           <h1 id="rulesTitle">規則</h1>
           <img id="rulesImg" src="">
           <div id="rulesNav"></div>
+      
         </div>
       </div>
  
@@ -723,7 +745,8 @@
           <div id="lives"></div>
           <div id="timerWrap">
             <div id="timerBar">
-              <div id="timerFill"></div>
+         
+               <div id="timerFill"></div>
               <div id="timerText">倒數計時</div>
             </div>
           </div>
@@ -732,7 +755,8 @@
         <div id="bottomArea">
         
           <div class="sideColumn">
-            <div class="bin" data-type="general"><img src="in-game-UI-images/trash.png"></div>
+            <div 
+ class="bin" data-type="general"><img src="in-game-UI-images/trash.png"></div>
             <div class="bin" data-type="recycle"><img src="in-game-UI-images/recycling.png"></div>
           </div>
         
@@ -741,7 +765,8 @@
             <div id="garbageName"></div>
           </div>
         
-          <div class="sideColumn">
+        
+           <div class="sideColumn">
             <div class="bin" data-type="food"><img src="in-game-UI-images/food-waste.png"></div>
             <div class="bin" data-type="other"><div class="otherBox">其他</div></div>
           </div>
@@ -751,13 +776,15 @@
         <div id="feedbackMask" onclick="if(event.target===this) delayedAction(() => smartNextFeedback())">
           <div id="feedback">
             <div id="feedbackFlex">
-              <div>
+    
+               <div>
                 <img id="feedbackImg">
                 <div id="feedbackItemName"></div>
               </div>
             
               <div id="feedbackRight">
-                <div id="feedbackTitle"></div>
+               
+                 <div id="feedbackTitle"></div>
                 <div id="feedbackText"></div>
               </div>
             </div>
@@ -766,6 +793,7 @@
         </div>
       
         <div id="gameOver">
+      
           <div id="gameOverBox">
             <h1>挑戰結束</h1>
             <h2 id="finalScore"></h2>
@@ -775,7 +803,8 @@
         </div>
    
         <div id="exitConfirm" onclick="if(event.target===this) delayedAction(() => smartCancelExit())">
-          <div id="exitBox">
+    
+           <div id="exitBox">
             <h2>確定離開遊戲？</h2>
             <p>目前進度將不會保留</p>
             <button class="endBtn" onclick="delayedAction(() => exitGame())">離開</button>
@@ -785,6 +814,7 @@
         
       </div>
     </div>
+ 
     
     <script>
       document.body.addEventListener('touchstart', function() {}, {passive: true});
@@ -819,13 +849,15 @@
             closeDetailUI();
           } else if (poppedFrom === 'rules') {
             closeRulesUI();
-          } else if (poppedFrom === 'exit') {
+          } else if (poppedFrom 
+ === 'exit') {
             // 在確認框按返回鍵為取消
             closeExitUI();
           } else if (poppedFrom === 'feedback') {
             // 在feedback框按返回鍵為確認
             processFeedbackNext();
           } else if (poppedFrom === 'gameOver' || poppedFrom === 'reference') {
+            
             showPage("home");
           } else if (poppedFrom === 'game') {
             // 在手機版遊戲中按一下返回鍵跳出回首頁的確認框
@@ -834,6 +866,7 @@
             // 這樣下一層的返回（取消）才會精準回到 game
             pushLayer('game');
             pushLayer('exit');
+ 
           }
         });
       }
@@ -845,7 +878,8 @@
           const rules = document.getElementById("rulesMask");
           const exitC = document.getElementById("exitConfirm");
           const feedback = document.getElementById("feedbackMask");
-          const gameO = document.getElementById("gameOver");
+       
+           const gameO = document.getElementById("gameOver");
           const gamePage = document.getElementById("gamePage");
           const refPage = document.getElementById("reference");
 
@@ -853,12 +887,12 @@
           else if (rules.style.display === "flex") closeRulesUI();
           else if (exitC.style.display === "flex") closeExitUI();
           else if (feedback.style.display === "flex" || feedback.style.display === "block") processFeedbackNext();
-          else if (gameO.style.display === "flex") showPage("home");
+       
+           else if (gameO.style.display === "flex") showPage("home");
           else if (gamePage.style.display === "block" || gamePage.style.display === "flex") openExitUI();
           else if (refPage.style.display === "block" || refPage.style.display === "flex") showPage("home");
         }
       });
-
       // ===== 按鈕點擊延遲系統 (修改為100毫秒) =====
       let isActionPending = false;
       function delayedAction(callback) {
@@ -1011,6 +1045,7 @@
         {name:"甘蔗皮",img:"garbage-image/sugarcane-peel.jpg",type:"general",desc:"不可回收廚餘(硬質、柔韌類與其他難分解物)：妥善裝袋後交給循線垃圾車。"},
         {name:"竹筍殼",img:"garbage-image/bamboo-shoot-husk.jpg",type:"general",desc:"不可回收廚餘(硬質、柔韌類與其他難分解物)：妥善裝袋後交給循線垃圾車。"},
         {name:"粽葉",img:"garbage-image/bamboo-leaves.jpg",type:"general",desc:"不可回收廚餘(硬質、柔韌類與其他難分解物)：妥善裝袋後交給循線垃圾車。"},
+ 
         {name:"打包帶(粗糙面/黃色)",img:"garbage-image/yellow-rough-packing-strap.jpg",type:"general",desc:"請妥善分類後，交給清潔隊循線垃圾車。"}, 
 
         {name:"塑膠保鮮盒",img:"garbage-image/plastic-food-storage-container.png",type:"recycle",desc:"請簡易清潔後，交給清潔隊循線回收車。"},
@@ -1024,6 +1059,7 @@
         {name:"餅乾鐵罐",img:"garbage-image/cookie-tin.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"鐵罐",img:"garbage-image/metal-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"殺蟲劑罐、殺蟑劑罐",img:"garbage-image/insecticide-spray-can.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
+    
         {name:"髮膠噴罐",img:"garbage-image/hair-spray-can.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
         {name:"噴漆罐",img:"garbage-image/spray-paint-can.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
         {name:"卡式爐瓦斯罐、高壓瓶罐(家用)",img:"garbage-image/portable-stove-gas-canisters.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
@@ -1036,6 +1072,7 @@
         {name:"慕斯瓶",img:"garbage-image/mousse-bottle.jpg",type:"recycle",desc:"惟高壓氣體可能易燃引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
         {name:"鋁盆",img:"garbage-image/aluminum-basin.jpg",type:"recycle",desc:"請妥善分類，交給清潔隊循線回收車。"},
         {name:"鋁門窗外框(不含玻璃)",img:"garbage-image/aluminum-door-and-window-frames.jpg",type:"recycle",desc:"簡易清潔後，交給清潔隊循線回收車。"},
+        
         {name:"雪平鍋",img:"garbage-image/yukihira-pot.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"鋁鍋",img:"garbage-image/aluminum-pot.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"果醬罐",img:"garbage-image/jam-jar.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
@@ -1049,6 +1086,7 @@
         {name:"飲料玻璃瓶",img:"garbage-image/beverage-glass-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"玻璃奶瓶",img:"garbage-image/glass-baby-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"玻璃保鮮盒",img:"garbage-image/glass-food-storage-container.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
+    
         {name:"香水玻璃瓶",img:"garbage-image/perfume-glass-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"紙盒",img:"garbage-image/paper-box.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"一般紙提袋、購物紙袋",img:"garbage-image/shopping-paper-bag.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
@@ -1061,6 +1099,7 @@
         {name:"紙餐具(含免洗餐具)",img:"garbage-image/paper-tableware-disposable-tableware.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"利樂包",img:"garbage-image/tetra-pak-cartons.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"鋁箔包",img:"garbage-image/aluminum-foil-package.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
+        
         {name:"飲料紙盒包",img:"garbage-image/beverage-paper-carton.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"泡麵紙碗",img:"garbage-image/instant-noodle-paper-bowl.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"便當紙盒、紙碗、紙杯",img:"garbage-image/paper-lunch-box-bowl-cup.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
@@ -1074,6 +1113,7 @@
         {name:"保麗龍",img:"garbage-image/styrofoam.jpg",type:"recycle",desc:"請簡易清潔去除黏附之膠帶附著物後，交給清潔隊循線回收車。"},
         {name:"養樂多瓶",img:"garbage-image/yakult-bottle.jpg",type:"recycle",desc:"請簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"塑膠奶瓶",img:"garbage-image/plastic-baby-bottle.jpg",type:"recycle",desc:"請簡易清潔與壓扁後，交給清潔隊循線回收車。"},
+    
         {name:"採樣瓶",img:"garbage-image/sampling-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"(粉色)塑膠免洗餐盤(碗)-一次性",img:"garbage-image/disposable-plastic-plate.jpg",type:"recycle",desc:"請簡易清潔並妥善分類後，交給清潔隊循線回收車。"},
         {name:"漂白水容器(PE)",img:"garbage-image/bleach-container-pe-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
@@ -1086,6 +1126,7 @@
         {name:"嬰幼兒坐便器",img:"garbage-image/baby-potty-chair.jpg",type:"recycle",desc:"妥善裝袋後交給循線回收車。"},
         {name:"塑膠桶、板凳、椅子、塑膠箱(籃)",img:"garbage-image/plastic-bucket-stool-chair-box-basket.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"灰色水管",img:"garbage-image/gray-water-pipe.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
+        
         {name:"PP板(軟中空)",img:"garbage-image/pp-hollow-sheet.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"塑膠水果套袋",img:"garbage-image/plastic-fruit-protection-bag.jpg",type:"recycle",desc:"請妥善清潔並分類後，交給清潔隊循線回收車。"},
         
@@ -1099,6 +1140,7 @@
         {name:"水果",img:"garbage-image/fruit.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         {name:"果皮",img:"garbage-image/fruit-peel.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         
+    
         {name:"鹼性電池",img:"garbage-image/alkaline-battery.png",type:"other",desc:"請妥善分類後，單獨交給清潔隊循線回收車。"},
         {name:"手推車(鐵製)",img:"garbage-image/iron-handcart.jpg",type:"other",desc:"請民眾先行拆解後(布、塑膠類或輪胎分離)，再交由資源回收車，若為大型推車，請洽清潔隊約定收運。"},
         {name:"鐵製保險箱",img:"garbage-image/iron-safe.jpg",type:"other",desc:"請妥善裝袋後交給循線垃圾車，惟若確認有回收標誌或可回收材質部門經現場人員判定後即可回收；如體積較大，請於丟出前先洽清潔隊預約收運。"},
@@ -1111,11 +1153,11 @@
         {name:"強化玻璃窗戶",img:"garbage-image/tempered-glass-window.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"汽車擋風玻璃",img:"garbage-image/car-windshield-glass.jpg",type:"other",desc:"為事業廢棄物，請自行委託合法的清除處理業者清運處理。"},
         {name:"白玻璃(優白玻璃、浮式明版玻璃)",img:"garbage-image/ultra-clear-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
+        
         {name:"魚缸玻璃",img:"garbage-image/fish-tank-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"化學用品罐",img:"garbage-image/chemical-glass-jar.jpg",type:"other",desc:"有骷顱頭、火焰等標示者請務必逆向回收予原製造或購置廠商。"},
         {name:"飲水機換裝桶",img:"garbage-image/water-dispenser-refill-bottle.jpg",type:"other",desc:"請交由生產或販賣業者逆向回收。"},
       ];
-      
       // ===== 電腦版橫式規則圖片 =====
       const rulesImages = [
         "rule-image/rule-page1.png",
@@ -1123,7 +1165,6 @@
         "rule-image/rule-page3.png",
         "rule-image/rule-page4.png"
       ];
-      
       // ===== 新增：手機版直式規則圖片 =====
       const rulesImagesMobile = [
         "rule-image/rule-page1-mobile.png",
@@ -1131,14 +1172,12 @@
         "rule-image/rule-page3-mobile.png",
         "rule-image/rule-page4-mobile.png"
       ];
-      
       let rulePage = 0;
       let lives,score,totalQ,current,timeLimit,endTime,timer;
       let canDrop=false;
       let dragging=false;
       let pendingGameOver=false;
       let recentImages = [];
-
       function changeCategory(type,btn){
         document.querySelectorAll(".tabBtn").forEach(t=>{
           t.classList.remove("active");
@@ -1160,7 +1199,8 @@
       
       function renderRules(){
         // 依據是否為手機裝置，來決定使用哪一組圖片陣列
-        const currentImages = isMobile ? rulesImagesMobile : rulesImages;
+        const currentImages = isMobile ?
+        rulesImagesMobile : rulesImages;
         
         document.getElementById("rulesImg").src = currentImages[rulePage];
         const nav = document.getElementById("rulesNav");
@@ -1251,7 +1291,8 @@
           
           let percent=remain/(timeLimit*1000)*100;
           document.getElementById("timerFill").style.width=percent+"%";
-          document.getElementById("timerText").innerText = "倒數計時：" + (remain / 1000).toFixed(1);
+   
+           document.getElementById("timerText").innerText = "倒數計時：" + (remain / 1000).toFixed(1);
         },20);
       }
       
@@ -1313,6 +1354,7 @@
         });
       
         bin.addEventListener("dragleave", () => {
+  
           bin.classList.remove("active");
         });
         
@@ -1322,6 +1364,7 @@
           
           if (!canDrop || !dragging) return;
           
+         
           dragging = false;
           canDrop = false;
           clearInterval(timer);
@@ -1331,11 +1374,11 @@
             score++;
             showFeedback(true);
           } else {
+  
             wrongAnswer(false);
           }
         });
       });
-
       // ===== 手機版觸控拖曳處理 =====
       let touchGhost = null;
       garbage.addEventListener("touchstart", (e) => {
@@ -1349,6 +1392,7 @@
         
         touchGhost = document.createElement("img");
         touchGhost.src = garbage.src;
+ 
         touchGhost.classList.add("touch-ghost"); 
         
         touchGhost.style.position = "absolute"; 
@@ -1358,13 +1402,13 @@
         touchGhost.style.width = garbage.clientWidth + "px";
         touchGhost.style.height = garbage.clientHeight + "px";
         
-        let rect = app.getBoundingClientRect();
+        let rect = 
+        app.getBoundingClientRect();
         let relativeX = touch.clientX - rect.left;
         let relativeY = touch.clientY - rect.top;
         
         touchGhost.style.left = (relativeX - garbage.clientWidth / 2) + "px";
         touchGhost.style.top = (relativeY - garbage.clientHeight / 2) + "px";
-        
         app.appendChild(touchGhost);
       }, { passive: false });
       
@@ -1377,6 +1421,7 @@
         let rect = app.getBoundingClientRect();
         
         let relativeX = touch.clientX - rect.left;
+        
         let relativeY = touch.clientY - rect.top;
  
         touchGhost.style.left = (relativeX - touchGhost.offsetWidth / 2) + "px";
@@ -1387,11 +1432,11 @@
         if (target) {
           let bin = target.closest(".bin");
           if (bin && canDrop) {
-            bin.classList.add("active");
+   
+           bin.classList.add("active");
           }
         }
       }, { passive: false });
-      
       garbage.addEventListener("touchend", (e) => {
         if (touchGhost) {
           touchGhost.remove();
@@ -1403,6 +1448,7 @@
         
         let touch = e.changedTouches[0];
         
+ 
         let target = document.elementFromPoint(touch.clientX, touch.clientY);
         let bin = target ? target.closest(".bin") : null;
         
@@ -1413,7 +1459,8 @@
         canDrop = false;
         clearInterval(timer);
         
-        let user = bin.dataset.type;
+   
+       let user = bin.dataset.type;
         
         if (user === current.type) {
           score++;
@@ -1422,7 +1469,6 @@
           wrongAnswer(false);
         }
       });
-      
       garbage.addEventListener("touchcancel", (e) => {
         dragging = false;
         if (touchGhost) {
@@ -1431,7 +1477,6 @@
         }
         document.querySelectorAll(".bin").forEach(b => b.classList.remove("active"));
       });
-      
       showPage("home");
       
     </script>
