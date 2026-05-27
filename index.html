@@ -212,14 +212,22 @@
         overflow-y: auto;
         position: relative;
         z-index: 2;
+        -webkit-overflow-scrolling: touch; /* 讓手機版滑動更順暢 */
       }
       
-      #itemsPanel::-webkit-scrollbar{ width:20px;
-      }
+      /* 利用透明邊框技術，將判定區域加寬至 36px，視覺上仍維持細細的 8px */
+      #itemsPanel::-webkit-scrollbar{ width: 36px; }
       #itemsPanel::-webkit-scrollbar-track{ background:transparent; margin-top:22px; margin-bottom:22px; }
-      #itemsPanel::-webkit-scrollbar-thumb{ background:#777; border-radius:999px;
-      border:6px solid transparent; background-clip:content-box; }
-      #itemsPanel::-webkit-scrollbar-thumb:active { background: #999; background-clip: content-box;
+      #itemsPanel::-webkit-scrollbar-thumb{ 
+        background:#777; 
+        border-radius:999px;
+        border: 14px solid transparent; 
+        background-clip: padding-box; 
+      }
+      #itemsPanel::-webkit-scrollbar-thumb:active { 
+        background: #999; 
+        border: 14px solid transparent; 
+        background-clip: padding-box; 
       }
       
       #itemsGrid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:16px;
@@ -317,6 +325,15 @@
         object-fit:contain;
         -webkit-user-drag:element;
         transition: transform 0.2s ease;
+        border-radius: 8px; /* 加入與列表圖片一致的圓角 */
+        overflow: hidden;
+      }
+
+      /* 殘影專屬圓角與防變形 */
+      .touch-ghost {
+        border-radius: 8px !important;
+        object-fit: contain !important;
+        overflow: hidden;
       }
       
       #garbageName{ margin-top:10px; font-size: clamp(26px, 3vw, 33px);
@@ -753,7 +770,8 @@
           // 第二次按返回鍵：關閉確認框並恢復遊戲
           exitC.style.display = "none";
           canDrop = true; // 恢復拖曳功能
-          pushLayer(); // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
+          pushLayer();
+          // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
         } else if (feedback.style.display === "flex" || feedback.style.display === "block") {
           processFeedbackNext();
         } else if (gameO.style.display === "flex") {
@@ -762,7 +780,8 @@
           // 第一次按返回鍵：跳出退出確認，不暫停計時器
           exitC.style.display = "flex";
           canDrop = false; // 避免確認框出現時還能背景拖曳
-          pushLayer(); // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
+          pushLayer();
+          // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
         } else if (refPage.style.display === "flex" || refPage.style.display === "block") {
           showPage("home");
         }
@@ -781,7 +800,6 @@
           handleBackAction();
         }
       });
-
       // ===== 按鈕點擊延遲系統 (修改為100毫秒) =====
       let isActionPending = false;
       function delayedAction(callback) {
@@ -798,11 +816,16 @@
       }
 
       // ===== 統一使用 Back 事件來觸發 UI 關閉 =====
-      function smartGoHome() { if (isMobile) history.back(); else showPage('home'); }
-      function smartCloseRules() { if (isMobile) history.back(); else closeRules(); }
-      function smartCloseDetail() { if (isMobile) history.back(); else closeDetail(); }
-      function smartCancelExit() { if (isMobile) history.back(); else closeExit(); }
-      function smartGameOverHome() { if (isMobile) history.back(); else showPage('home'); }
+      function smartGoHome() { if (isMobile) history.back();
+      else showPage('home'); }
+      function smartCloseRules() { if (isMobile) history.back(); else closeRules();
+      }
+      function smartCloseDetail() { if (isMobile) history.back(); else closeDetail();
+      }
+      function smartCancelExit() { if (isMobile) history.back(); else closeExit();
+      }
+      function smartGameOverHome() { if (isMobile) history.back(); else showPage('home');
+      }
       
       const heartURL = "in-game-UI-images/heart.webp";
       const garbageList = [
@@ -857,7 +880,7 @@
         {name:"飲料玻璃瓶",img:"garbage-image/beverage-glass-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"玻璃奶瓶",img:"garbage-image/glass-baby-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"玻璃保鮮盒",img:"garbage-image/glass-food-storage-container.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
-        
+      
         {name:"香水玻璃瓶",img:"garbage-image/perfume-glass-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"紙盒",img:"garbage-image/paper-box.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"一般紙提袋、購物紙袋",img:"garbage-image/shopping-paper-bag.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
@@ -870,6 +893,7 @@
         {name:"紙餐具(含免洗餐具)",img:"garbage-image/paper-tableware-disposable-tableware.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"利樂包",img:"garbage-image/tetra-pak-cartons.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"鋁箔包",img:"garbage-image/aluminum-foil-package.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
+  
         {name:"飲料紙盒包",img:"garbage-image/beverage-paper-carton.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
     
         {name:"泡麵紙碗",img:"garbage-image/instant-noodle-paper-bowl.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
@@ -883,6 +907,7 @@
         {name:"零食類",img:"garbage-image/snack.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         {name:"蔬菜",img:"garbage-image/vegetable.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         {name:"水果",img:"garbage-image/fruit.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
+  
         {name:"果皮",img:"garbage-image/fruit-peel.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         
         {name:"鹼性電池",img:"garbage-image/alkaline-battery.png",type:"other",desc:"請妥善分類後，單獨交給清潔隊循線回收車。"},
@@ -895,6 +920,7 @@
         {name:"玻璃水晶燈",img:"garbage-image/glass-crystal-lamp.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"門窗玻璃",img:"garbage-image/door-and-window-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"強化玻璃窗戶",img:"garbage-image/tempered-glass-window.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
+      
         {name:"汽車擋風玻璃",img:"garbage-image/car-windshield-glass.jpg",type:"other",desc:"為事業廢棄物，請自行委託合法的清除處理業者清運處理。"},
         {name:"白玻璃(優白玻璃、浮式明版玻璃)",img:"garbage-image/ultra-clear-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
     
@@ -907,16 +933,13 @@
         "rule-image/rule-page3.png",
         "rule-image/rule-page4.png"
       ];
-      
       let rulePage = 0;
       let lives,score,totalQ,current,timeLimit,endTime,timer;
       let canDrop=false;
       let dragging=false;
       let pendingGameOver=false;
-      
       // ===== 新增：記錄最近出過的題目圖片，用於防重複 =====
-      let recentImages = []; 
-
+      let recentImages = [];
       function showPage(id){
         if (id !== 'home') pushLayer();
 
@@ -932,7 +955,6 @@
         }
       }
       showPage("home");
-
       function changeCategory(type,btn){
         document.querySelectorAll(".tabBtn").forEach(t=>{
           t.classList.remove("active");
@@ -1020,18 +1042,17 @@
       
       function startGame(){
         closeAllMasks();
-        
         // ===== 【核心修正】：塞入「歷史紀錄緩衝墊 (Buffer State)」 =====
         // 這樣可以保證玩家就算在遊戲內連點兩次返回鍵，也只是吃掉這個緩衝區，而不會跳出網頁
         if (isMobile) history.pushState({ buffer: true }, "", location.href);
-        
         canDrop = true;
         dragging = false;
         pendingGameOver = false;
         lives=5;
         score=0;
         totalQ=0;
-        recentImages = []; // 新遊戲重置記憶題庫
+        recentImages = [];
+        // 新遊戲重置記憶題庫
         
         document.getElementById("gameOver").style.display="none";
         showPage("gamePage");
@@ -1073,7 +1094,6 @@
         
         // ===== 實作防重複機制 (最近 10 題不會出現相同的圖片) =====
         let availableGarbage = garbageList.filter(item => !recentImages.includes(item.img));
-        
         // 防呆機制：如果真的全部都被抽光了（通常不會，因為題庫有 80 幾題），就開放全部題庫
         if (availableGarbage.length === 0) {
             availableGarbage = garbageList;
@@ -1081,7 +1101,6 @@
         
         // 從過濾後的題庫中隨機抽題
         current = availableGarbage[Math.floor(Math.random() * availableGarbage.length)];
-        
         // 將剛抽出的題目加入近期記憶中
         recentImages.push(current.img);
         // 若記憶超過 10 題，就把最舊的那一題忘掉，讓它有機會再次出現
@@ -1114,7 +1133,8 @@
           
           let percent=remain/(timeLimit*1000)*100;
           document.getElementById("timerFill").style.width=percent+"%";
-          document.getElementById("timerText").innerText = "倒數計時：" + (remain / 1000).toFixed(1);
+   
+        document.getElementById("timerText").innerText = "倒數計時：" + (remain / 1000).toFixed(1);
         },20);
       }
       
@@ -1124,7 +1144,6 @@
         
         // 安全機制：如果在確認離開的畫面剛好超時，強制關閉確認框以顯示回饋
         document.getElementById("exitConfirm").style.display = "none";
-        
         if(timeout){
           document.getElementById("timerFill").style.width="0%";
           document.getElementById("timerText").innerText = "倒數計時：0.0";
@@ -1211,6 +1230,7 @@
         });
       
         bin.addEventListener("dragleave", () => {
+  
           bin.classList.remove("active");
         });
         
@@ -1220,6 +1240,7 @@
           
           if (!canDrop || !dragging) return;
           
+         
           dragging = false;
           canDrop = false;
           clearInterval(timer);
@@ -1229,6 +1250,7 @@
           if (user === current.type) {
             score++;
             showFeedback(true);
+    
           } else {
             wrongAnswer(false);
           }
@@ -1241,13 +1263,19 @@
         if (!canDrop) return;
         dragging = true;
         
+        // 強制阻止手機預設的圖片長按選單與原生拖曳 (防止殘影中斷)
+        if (e.cancelable) e.preventDefault();
+        
         let touch = e.touches[0];
         let app = document.getElementById("app");
         
-        touchGhost = garbage.cloneNode(true);
+        // 解決高壓縮 JPG 造成的殘影隱形 Bug，改用 createElement 重新生成標籤
+        touchGhost = document.createElement("img");
+        touchGhost.src = garbage.src;
+        touchGhost.classList.add("touch-ghost"); // 掛上 CSS class 套用圓角
+        
         touchGhost.style.position = "absolute"; 
         touchGhost.style.pointerEvents = "none";
-        
         touchGhost.style.zIndex = "9999";
         touchGhost.style.opacity = "0.7";
         touchGhost.style.width = garbage.clientWidth + "px";
@@ -1282,6 +1310,7 @@
         if (target) {
           let bin = target.closest(".bin");
           if (bin && canDrop) {
+         
             bin.classList.add("active");
           }
         }
