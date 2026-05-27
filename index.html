@@ -137,11 +137,8 @@
         margin-bottom: 0;
         z-index: 10;
         font-size: clamp(27px, 2.25vw, 33px);
-        /* 18px 的 1.5倍 */
         padding: 18px 36px;
-        /* 12px 24px 的 1.5倍 */
         border-radius: 18px;
-        /* 12px 的 1.5倍 */
       }
       
       #refContainer {
@@ -212,22 +209,14 @@
         overflow-y: auto;
         position: relative;
         z-index: 2;
-        -webkit-overflow-scrolling: touch; /* 讓手機版滑動更順暢 */
       }
       
-      /* 利用透明邊框技術，將判定區域加寬至 36px，視覺上仍維持細細的 8px */
-      #itemsPanel::-webkit-scrollbar{ width: 36px; }
+      /* ===== 復原 Scroll Bar 設定 ===== */
+      #itemsPanel::-webkit-scrollbar{ width:20px; }
       #itemsPanel::-webkit-scrollbar-track{ background:transparent; margin-top:22px; margin-bottom:22px; }
-      #itemsPanel::-webkit-scrollbar-thumb{ 
-        background:#777; 
-        border-radius:999px;
-        border: 14px solid transparent; 
-        background-clip: padding-box; 
-      }
-      #itemsPanel::-webkit-scrollbar-thumb:active { 
-        background: #999; 
-        border: 14px solid transparent; 
-        background-clip: padding-box; 
+      #itemsPanel::-webkit-scrollbar-thumb{ background:#777; border-radius:999px;
+      border:6px solid transparent; background-clip:content-box; }
+      #itemsPanel::-webkit-scrollbar-thumb:active { background: #999; background-clip: content-box;
       }
       
       #itemsGrid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:16px;
@@ -319,16 +308,17 @@
       #centerGarbage{ width:30%; text-align:center;
       }
       
-      #garbage{
+      /* ===== 強化電腦版圓角設定 ===== */
+      #garbage {
         width: clamp(156px, 26vh, 216px);
         height: clamp(156px, 26vh, 216px);
-        object-fit:contain;
-        -webkit-user-drag:element;
+        object-fit: contain;
+        -webkit-user-drag: element; /* 允許電腦版拖曳 */
         transition: transform 0.2s ease;
-        border-radius: 8px; /* 加入與列表圖片一致的圓角 */
-        overflow: hidden;
+        border-radius: 8px; 
+        background-color: transparent; /* 確保沒有奇怪的背景色 */
       }
-
+      
       /* 殘影專屬圓角與防變形 */
       .touch-ghost {
         border-radius: 8px !important;
@@ -693,7 +683,7 @@
           </div>
         
           <div id="centerGarbage">
-            <img id="garbage" draggable="true" src="">
+            <img id="garbage" draggable="true" src="" style="border-radius: 8px;">
             <div id="garbageName"></div>
           </div>
         
@@ -770,8 +760,7 @@
           // 第二次按返回鍵：關閉確認框並恢復遊戲
           exitC.style.display = "none";
           canDrop = true; // 恢復拖曳功能
-          pushLayer();
-          // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
+          pushLayer(); // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
         } else if (feedback.style.display === "flex" || feedback.style.display === "block") {
           processFeedbackNext();
         } else if (gameO.style.display === "flex") {
@@ -780,8 +769,7 @@
           // 第一次按返回鍵：跳出退出確認，不暫停計時器
           exitC.style.display = "flex";
           canDrop = false; // 避免確認框出現時還能背景拖曳
-          pushLayer();
-          // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
+          pushLayer(); // 強制寫入帶有獨立時間戳的狀態，防止瀏覽器忽略
         } else if (refPage.style.display === "flex" || refPage.style.display === "block") {
           showPage("home");
         }
