@@ -298,7 +298,7 @@
       #lives{ display:flex;
       gap:8px; min-height: clamp(57px, 12.9vh, 17.2vh); }
       .life{ width: clamp(57px, 12.9vh, 17.2vh); height: clamp(57px, 12.9vh, 17.2vh);
-      object-fit: contain; }
+          object-fit: contain; }
       
       #timerWrap{ display:flex; align-items:center; gap:10px;
       }
@@ -402,9 +402,9 @@
       }
       
       #exitBox h2 { font-size: clamp(36px, 4.5vw, 42px);
-      margin-bottom: 12px; }
+          margin-bottom: 12px; }
       #exitBox p { font-size: clamp(24px, 3vw, 28px);
-      margin: 16px 0 24px 0 !important; }
+          margin: 16px 0 24px 0 !important; }
       
       .endBtn{ width:100%;
       margin-top:12px; padding:14px; font-size: clamp(18px, 2vw, 22px); border:none; border-radius:12px; background:#888; color:#fff;
@@ -481,7 +481,17 @@
         }
         #topBar { top: 11% !important;
         }
-        #bottomArea { bottom: 8% !important;
+        
+        /* 【電腦版優化】讓底部的遊玩核心區域完全限定在「愛心與計時條下方的剩餘空間」進行垂直置中，絕不上漂重疊 */
+        #bottomArea { 
+          position: absolute !important;
+          top: 30% !important;   /* 完美自頂部往下推開，避開愛心與計時條 */
+          bottom: 2% !important; /* 限制底部最大延伸邊界 */
+          height: auto !important;
+          width: 100% !important;
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important; /* 將垃圾與四個垃圾桶整體當作一個區塊，在該空間內垂直置中 */
         }
         
         /* 電腦版 bins 間距 */
@@ -526,7 +536,6 @@
       /* ======================================================= */
       /* ===== 手機直式原生的響應式版型 ===== */
       /* ======================================================= */
-      /* 防呆：加入 pointer:coarse 與 max-width 雙重限制，絕對不讓電腦視窗縮小觸發 */
       @media screen and (max-width: 1024px) and (orientation: portrait) and (pointer: coarse) {
         #app { aspect-ratio: auto;
         width: 100vw; height: 100dvh; overflow: hidden; display: flex; flex-direction: column;
@@ -565,7 +574,6 @@
         .itemName { font-size: 18px;
         }
 
-        /* 手機版還原回原本大小 */
         #reference .topBack {
           position: absolute;
           top: auto; bottom: 3dvh; left: 50%; transform: translateX(-50%); width: 80vw; max-width: 280px; margin: 0; text-align: center;
@@ -582,7 +590,6 @@
         #topBar { top: 11dvh; position: relative; left: 0; right: 0;
         padding: 0 4vw; flex-direction: column; gap: 8px; align-items: center; }
         
-        /* 修正點：鎖定愛心欄位的總高度(維持6dvh或40px)，防止愛心消失時倒數計時條往上位移 */
         #lives { height: 6dvh; max-height: 40px; min-height: auto;
         gap: 4px; display: flex; align-items: center; justify-content: center; }
         .life { width: 6dvh; height: 6dvh; max-width: 40px; max-height: 40px;
@@ -643,11 +650,10 @@
         #exitBox p { font-size: clamp(18px, 4vw, 28px);
         }
 
-        /* 將規則框拉長，確保底部導覽列不被擠出框外 */
         #rulesBox { 
           width: 90vw;
           height: auto; 
-          min-height: 85dvh; /* 拉長規則框的高度保證按鈕都在框內 */
+          min-height: 85dvh; 
           max-height: 92dvh;
           padding: 50px 16px 20px;
           justify-content: space-between;
@@ -663,11 +669,10 @@
           z-index: 10;
         }
         
-        /* ===== 手機版 5:7 直立規則圖設定 ===== */
         #rulesImg { 
           width: 100%;
           max-height: 65vh; 
-          aspect-ratio: 5 / 7; /* 強制覆蓋為直立比例 */
+          aspect-ratio: 5 / 7; 
           object-fit: contain;
           border-radius:12px;
           margin: 10px auto; 
@@ -843,7 +848,6 @@
       }
 
       if (isMobile) {
-        // 初始化首頁狀態
         history.replaceState({ name: 'home' }, "", location.href);
         window.addEventListener('popstate', (e) => {
           const poppedFrom = currentState;
@@ -854,26 +858,21 @@
           } else if (poppedFrom === 'rules') {
             closeRulesUI();
           } else if (poppedFrom === 'exit') {
-            // 在確認框按返回鍵為取消
             closeExitUI();
           } else if (poppedFrom === 'feedback') {
-            // 在feedback框按返回鍵為確認
             processFeedbackNext();
           } else if (poppedFrom === 'gameOver' || poppedFrom === 'reference') {
-            document.getElementById("gameOver").style.display = "none"; // 修正點：手機返回時同步關閉結束框
+            document.getElementById("gameOver").style.display = "none";
             showPage("home");
           } else if (poppedFrom === 'game') {
-            // 在手機版遊戲中按一下返回鍵跳出回首頁的確認框
             openExitUI();
-            // 由於 popstate 把 game 給彈出了，我們必須將 game 補回去，然後再推入 exit
-            // 這樣下一層的返回（取消）才會精準回到 game
             pushLayer('game');
             pushLayer('exit');
           }
         });
       }
 
-      // ===== 電腦版 Esc 鍵監聽 (不依賴 History API，手動關閉) =====
+      // ===== 電腦版 Esc 鍵監聽 =====
       window.addEventListener('keydown', (e) => {
         if (!isMobile && (e.key === "Escape" || e.key === "Esc")) {
           const detail = document.getElementById("detailMask");
@@ -897,7 +896,7 @@
         }
       });
 
-      // ===== 按鈕點擊延遲系統 (修改為100毫秒) =====
+      // ===== 按鈕點擊延遲系統 =====
       let isActionPending = false;
       function delayedAction(callback) {
         if (isActionPending) return;
@@ -938,9 +937,6 @@
         document.getElementById("rulesMask").style.display = "flex";
         renderRules();
       }
-      function gridRulesFix() {
-        // 保留相容性結構
-      }
       function closeRulesUI() {
         document.getElementById("rulesMask").style.display = "none";
       }
@@ -975,25 +971,17 @@
         document.getElementById("detailMask").classList.remove("show");
       }
 
-      // ===== 按鈕綁定的動作函式 (統合 History 與 UI) =====
-      function smartGoHome() { if (isMobile) history.back();
-      else showPage('home'); }
-      function smartCloseRules() { if (isMobile) history.back(); else closeRulesUI();
-      }
-      function smartCloseDetail() { if (isMobile) history.back(); else closeDetailUI();
-      }
-      function smartCancelExit() { if (isMobile) history.back(); else closeExitUI();
-      }
-      
-      // 修正點：挑戰結束框點擊回首頁時，必須強制把結束框徹底隱藏
+      // ===== 按鈕綁定的動作函式 =====
+      function smartGoHome() { if (isMobile) history.back(); else showPage('home'); }
+      function smartCloseRules() { if (isMobile) history.back(); else closeRulesUI(); }
+      function smartCloseDetail() { if (isMobile) history.back(); else closeDetailUI(); }
+      function smartCancelExit() { if (isMobile) history.back(); else closeExitUI(); }
       function smartGameOverHome() {
         document.getElementById("gameOver").style.display = "none"; 
         if (isMobile) history.back(); 
         else showPage('home'); 
       }
-      
-      function smartNextFeedback() { if (isMobile) history.back(); else processFeedbackNext();
-      }
+      function smartNextFeedback() { if (isMobile) history.back(); else processFeedbackNext(); }
 
       function openReference() {
         if (isMobile) pushLayer('reference');
@@ -1016,14 +1004,11 @@
         clearInterval(timer); 
         canDrop = false;
         dragging = false;
-        
         document.querySelectorAll(".bin").forEach(b => b.classList.remove("active"));
-        
         if (typeof touchGhost !== 'undefined' && touchGhost) {
           touchGhost.remove();
           touchGhost = null;
         }
-
         closeExitUI();
         showPage("home");
         if (isMobile) replaceLayer('home');
@@ -1068,11 +1053,9 @@
         {name:"鳳梨冠芽",img:"garbage-image/pineapple-crown.jpg",type:"general",desc:"不可回收廚餘(硬質、柔韌類與其他難分解物)：妥善裝袋後交給循線垃圾車。"},
         {name:"玉米芯",img:"garbage-image/corn-cob.jpg",type:"general",desc:"不可回收廚餘(硬質、柔韌類與其他難分解物)：妥善裝袋後交給循線垃圾車。"},
         {name:"甘蔗皮",img:"garbage-image/sugarcane-peel.jpg",type:"general",desc:"不可回收廚餘(硬質、柔韌類與其他難分解物)：妥善裝袋後交給循線垃圾車。"},
-        {name:"竹筍殼",img:"garbage-image/bamboo-shoot-husk.jpg",type:"general",desc:"不可回收廚餘(硬質、柔韌類與其他難分解物)：妥善裝袋後交給循線垃圾車。"},
+        {name:"竹筍殼",img:"garbage-image/bamboo-shoot-husk.jpg",type:"general",desc:"不可回收廚餘(硬質、柔韌類與其他難分解物)：妥善裝袋後交給循線垃圾車.。"},
         {name:"粽葉",img:"garbage-image/bamboo-leaves.jpg",type:"general",desc:"不可回收廚餘(硬質、柔韌類與其他難分解物)：妥善裝袋後交給循線垃圾車。"},
- 
         {name:"打包帶(粗糙面/黃色)",img:"garbage-image/yellow-rough-packing-strap.jpg",type:"general",desc:"請妥善分類後，交給清潔隊循線垃圾車。"}, 
-
         {name:"塑膠保鮮盒",img:"garbage-image/plastic-food-storage-container.png",type:"recycle",desc:"請簡易清潔後，交給清潔隊循線回收車。"},
         {name:"食品罐頭",img:"garbage-image/food-can.png",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"油漆罐",img:"garbage-image/paint-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
@@ -1084,7 +1067,6 @@
         {name:"餅乾鐵罐",img:"garbage-image/cookie-tin.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"鐵罐",img:"garbage-image/metal-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"殺蟲劑罐、殺蟑劑罐",img:"garbage-image/insecticide-spray-can.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
-   
         {name:"髮膠噴罐",img:"garbage-image/hair-spray-can.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
         {name:"噴漆罐",img:"garbage-image/spray-paint-can.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
         {name:"卡式爐瓦斯罐、高壓瓶罐(家用)",img:"garbage-image/portable-stove-gas-canisters.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
@@ -1097,7 +1079,6 @@
         {name:"慕斯瓶",img:"garbage-image/mousse-bottle.jpg",type:"recycle",desc:"惟高壓氣體可能易燃引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
         {name:"鋁盆",img:"garbage-image/aluminum-basin.jpg",type:"recycle",desc:"請妥善分類，交給清潔隊循線回收車。"},
         {name:"鋁門窗外框(不含玻璃)",img:"garbage-image/aluminum-door-and-window-frames.jpg",type:"recycle",desc:"簡易清潔後，交給清潔隊循線回收車。"},
-   
         {name:"雪平鍋",img:"garbage-image/yukihira-pot.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"鋁鍋",img:"garbage-image/aluminum-pot.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"果醬罐",img:"garbage-image/jam-jar.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
@@ -1108,11 +1089,9 @@
         {name:"玻璃瓶罐",img:"garbage-image/glass-bottle-and-jar.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"化妝品瓶罐",img:"garbage-image/cosmetic-bottle-and-jar.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"玻璃杯碗盤",img:"garbage-image/glass-cup-bowl-plate.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
-        {name:"飲料玻璃瓶",img:"garbage-image/beverage-glass-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
-       
+        {name:"飲料玻璃瓶",img:"garbage-image/beverage-glass-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車.。"},
         {name:"玻璃奶瓶",img:"garbage-image/glass-baby-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"玻璃保鮮盒",img:"garbage-image/glass-food-storage-container.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
-    
         {name:"香水玻璃瓶",img:"garbage-image/perfume-glass-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清洗後並妥善包裝，交給清潔隊循線回收車。"},
         {name:"紙盒",img:"garbage-image/paper-box.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"一般紙提袋、購物紙袋",img:"garbage-image/shopping-paper-bag.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
@@ -1123,10 +1102,8 @@
         {name:"筆記書紙",img:"garbage-image/notebook-paper.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"電腦紙報表",img:"garbage-image/computer-paper.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"紙餐具(含免洗餐具)",img:"garbage-image/paper-tableware-disposable-tableware.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
-      
         {name:"利樂包",img:"garbage-image/tetra-pak-cartons.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"鋁箔包",img:"garbage-image/aluminum-foil-package.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
-        
         {name:"飲料紙盒包",img:"garbage-image/beverage-paper-carton.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"泡麵紙碗",img:"garbage-image/instant-noodle-paper-bowl.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"便當紙盒、紙碗、紙杯",img:"garbage-image/paper-lunch-box-bowl-cup.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
@@ -1136,13 +1113,10 @@
         {name:"清潔劑瓶(含洗碗精、洗衣精)",img:"garbage-image/cleaner-bottle.jpg",type:"recycle",desc:"請簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"洗髮精瓶",img:"garbage-image/shampoo-bottle.jpg",type:"recycle",desc:"請簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"牛奶瓶",img:"garbage-image/milk-bottle.jpg",type:"recycle",desc:"請簡易清潔與壓扁後，交給清潔隊循線回收車。"},
-   
         {name:"豆漿瓶、優酪乳",img:"garbage-image/soy-milk-bottle-yogurt-drink-bottle.jpg",type:"recycle",desc:"請簡易清潔與壓扁後，交給清潔隊循線回收車。"},
-   
         {name:"保麗龍",img:"garbage-image/styrofoam.jpg",type:"recycle",desc:"請簡易清潔去除黏附之膠帶附著物後，交給清潔隊循線回收車。"},
         {name:"養樂多瓶",img:"garbage-image/yakult-bottle.jpg",type:"recycle",desc:"請簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"塑膠奶瓶",img:"garbage-image/plastic-baby-bottle.jpg",type:"recycle",desc:"請簡易清潔與壓扁後，交給清潔隊循線回收車。"},
-    
         {name:"採樣瓶",img:"garbage-image/sampling-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"(粉色)塑膠免洗餐盤(碗)-一次性",img:"garbage-image/disposable-plastic-plate.jpg",type:"recycle",desc:"請簡易清潔並妥善分類後，交給清潔隊循線回收車。"},
         {name:"漂白水容器(PE)",img:"garbage-image/bleach-container-pe-bottle.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
@@ -1150,61 +1124,45 @@
         {name:"壓克力(平板)",img:"garbage-image/acrylic-sheet.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"塑膠水桶",img:"garbage-image/plastic-bucket.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"塑膠工具箱",img:"garbage-image/plastic-toolbox.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
-      
         {name:"塑膠氣泡紙(包裝用透明)",img:"garbage-image/plastic-bubble-wrap.jpg",type:"recycle",desc:"妥善裝袋後交給循線資收車。"},
         {name:"水管",img:"garbage-image/water-pipe.jpg",type:"recycle",desc:"妥善裝袋後交給循線回收車。"},
-   
         {name:"嬰幼兒坐便器",img:"garbage-image/baby-potty-chair.jpg",type:"recycle",desc:"妥善裝袋後交給循線回收車。"},
         {name:"塑膠桶、板凳、椅子、塑膠箱(籃)",img:"garbage-image/plastic-bucket-stool-chair-box-basket.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"灰色水管",img:"garbage-image/gray-water-pipe.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
-        
         {name:"PP板(軟中空)",img:"garbage-image/pp-hollow-sheet.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"塑膠水果套袋",img:"garbage-image/plastic-fruit-protection-bag.jpg",type:"recycle",desc:"請妥善清潔並分類後，交給清潔隊循線回收車。"},
-        
         {name:"米食",img:"garbage-image/rice-based-food.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         {name:"豆食",img:"garbage-image/soy-based-food.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
-       
         {name:"蛋類",img:"garbage-image/egg-based-food.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         {name:"肉類",img:"garbage-image/meat-based-food.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
- 
         {name:"麵食類",img:"garbage-image/flour-based-food.jpeg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
-       
         {name:"零食類",img:"garbage-image/snack.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         {name:"蔬菜",img:"garbage-image/vegetable.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         {name:"水果",img:"garbage-image/fruit.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         {name:"果皮",img:"garbage-image/fruit-peel.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
-        
-    
         {name:"鹼性電池",img:"garbage-image/alkaline-battery.png",type:"other",desc:"請妥善分類後，單獨交給清潔隊循線回收車。"},
         {name:"手推車(鐵製)",img:"garbage-image/iron-handcart.jpg",type:"other",desc:"請民眾先行拆解後(布、塑膠類或輪胎分離)，再交由資源回收車，若為大型推車，請洽清潔隊約定收運。"},
         {name:"鐵製保險箱",img:"garbage-image/iron-safe.jpg",type:"other",desc:"請妥善裝袋後交給循線垃圾車，惟若確認有回收標誌或可回收材質部門經現場人員判定後即可回收；如體積較大，請於丟出前先洽清潔隊預約收運。"},
-       
         {name:"平板玻璃(強化玻璃、玻璃塑鋼、膠合玻璃)",img:"garbage-image/flat-glass.jpg",type:"other",desc:"請先敲碎並妥善包裝防穿破，交給清潔隊循線垃圾車，若為大型玻璃，請洽清潔隊預約收運。"},
         {name:"隔熱玻璃",img:"garbage-image/insulated-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
-  
         {name:"玻璃桌墊",img:"garbage-image/glass-table-pad.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"煤油燈(玻璃)",img:"garbage-image/kerosene-lamp.jpg",type:"other",desc:"請排空內容物，妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請洽清潔隊預約收運。"},
-       
         {name:"玻璃水晶燈",img:"garbage-image/glass-crystal-lamp.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"門窗玻璃",img:"garbage-image/door-and-window-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"強化玻璃窗戶",img:"garbage-image/tempered-glass-window.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"汽車擋風玻璃",img:"garbage-image/car-windshield-glass.jpg",type:"other",desc:"為事業廢棄物，請自行委託合法的清除處理業者清運處理。"},
         {name:"白玻璃(優白玻璃、浮式明版玻璃)",img:"garbage-image/ultra-clear-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
-        
         {name:"魚缸玻璃",img:"garbage-image/fish-tank-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"化學用品罐",img:"garbage-image/chemical-glass-jar.jpg",type:"other",desc:"有骷顱頭、火焰等標示者請務必逆向回收予原製造或購置廠商。"},
-  
         {name:"飲水機換裝桶",img:"garbage-image/water-dispenser-refill-bottle.jpg",type:"other",desc:"請交由生產或販賣業者逆向回收。"},
       ];
 
-      // ===== 電腦版橫式規則圖片 =====
       const rulesImages = [
         "rule-image/rule-page1.png",
         "rule-image/rule-page2.png",
         "rule-image/rule-page3.png",
         "rule-image/rule-page4.png"
       ];
-      // ===== 新增：手機版直式規則圖片 =====
       const rulesImagesMobile = [
         "rule-image/rule-page1-mobile.png",
         "rule-image/rule-page2-mobile.png",
@@ -1239,9 +1197,7 @@
       }
       
       function renderRules(){
-        const currentImages = isMobile ?
-        rulesImagesMobile : rulesImages;
-        
+        const currentImages = isMobile ? rulesImagesMobile : rulesImages;
         document.getElementById("rulesImg").src = currentImages[rulePage];
         const nav = document.getElementById("rulesNav");
         nav.innerHTML = "";
@@ -1331,8 +1287,7 @@
           
           let percent=remain/(timeLimit*1000)*100;
           document.getElementById("timerFill").style.width=percent+"%";
-   
-           document.getElementById("timerText").innerText = "倒數計時：" + (remain / 1000).toFixed(1);
+          document.getElementById("timerText").innerText = "倒數計時：" + (remain / 1000).toFixed(1);
         },20);
       }
       
@@ -1421,7 +1376,6 @@
       garbage.addEventListener("touchstart", (e) => {
         if (!canDrop) return;
         dragging = true;
-        
         if (e.cancelable) e.preventDefault();
         
         let touch = e.touches[0];
@@ -1429,7 +1383,6 @@
         
         touchGhost = document.createElement("img");
         touchGhost.src = garbage.src;
- 
         touchGhost.classList.add("touch-ghost"); 
         
         touchGhost.style.position = "absolute"; 
@@ -1439,8 +1392,7 @@
         touchGhost.style.width = garbage.clientWidth + "px";
         touchGhost.style.height = garbage.clientHeight + "px";
         
-        let rect = 
-        app.getBoundingClientRect();
+        let rect = app.getBoundingClientRect();
         let relativeX = touch.clientX - rect.left;
         let relativeY = touch.clientY - rect.top;
         
@@ -1482,19 +1434,16 @@
         dragging = false;
         
         let touch = e.changedTouches[0];
-        
         let target = document.elementFromPoint(touch.clientX, touch.clientY);
         let bin = target ? target.closest(".bin") : null;
         
         document.querySelectorAll(".bin").forEach(b => b.classList.remove("active"));
-        
         if (!bin) return;
         
         canDrop = false;
         clearInterval(timer);
         
-       let user = bin.dataset.type;
-        
+        let user = bin.dataset.type;
         if (user === current.type) {
           score++;
           showFeedback(true);
@@ -1513,6 +1462,5 @@
       showPage("home");
       
     </script>
-    
   </body>
 </html>
