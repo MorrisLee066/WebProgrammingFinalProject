@@ -139,7 +139,7 @@
         padding: 20px;
       }
       
-      /* 【電腦版專屬】分類一覽表的回首頁按鈕放大 1.5 倍 (vw/vh 轉為 % 防偏移) */
+      /* 【電腦版專屬】分類一覽表的回首頁按鈕放大 1.5 倍 */
       #reference .topBack {
         position: absolute;
         top: 4%;
@@ -244,7 +244,7 @@
       .itemName{ margin-top:8px; font-size: clamp(16px, 1.5vw, 22px); color:#fff;
       }
       
-      /* 詳細資料彈窗 (全域化防偏移，改為 fixed) */
+      /* 詳細資料彈窗 */
       #detailMask{
         position:fixed;
         inset:0; background:rgba(0,0,0,.45); display:flex; justify-content:center; align-items:center; z-index:100;
@@ -273,7 +273,7 @@
         font-size: clamp(20px, 2vw, 28px); border:none; border-radius:16px; background:#888; color:#fff;
       }
       
-      /* 遊戲頁 (vw/vh 轉為 % 防偏移) */
+      /* 遊戲頁 */
       .gameBackBtn{ position:absolute;
       top:3%; left:3%; z-index:5; }
       
@@ -298,7 +298,7 @@
       #lives{ display:flex;
       gap:8px; min-height: clamp(57px, 12.9vh, 17.2vh); }
       .life{ width: clamp(57px, 12.9vh, 17.2vh); height: clamp(57px, 12.9vh, 17.2vh);
-          object-fit: contain; }
+      object-fit: contain; }
       
       #timerWrap{ display:flex; align-items:center; gap:10px;
       }
@@ -372,7 +372,7 @@
         background:#444; border-radius:16px; display:flex; justify-content:center; align-items:center; font-size: clamp(34px, 4.3vw, 46px);
       }
       
-      /* 回饋 (全域化防偏移，改為 fixed) */
+      /* 回饋 */
       #feedback{
         width:fit-content;
         max-width:60%; min-width:320px; background:#444; color:#fff; border-radius:18px; padding: clamp(20px, 3vw, 28px); text-align:left;
@@ -393,7 +393,7 @@
       #nextBtn{ margin:18px auto 0; display:block; padding:14px 32px; font-size: clamp(20px, 2vw, 24px); border:none; border-radius:12px; background:#837f7f;
       color:#fff; }
       
-      /* 結束 / 離開 (全域化防偏移，改為 fixed) */
+      /* 結束 / 離開 */
       #gameOver, #exitConfirm{ position:fixed;
       inset:0; background:rgba(0,0,0,.8); display:none; justify-content:center; align-items:center; z-index:100; }
       #gameOverBox, #exitBox{
@@ -402,15 +402,15 @@
       }
       
       #exitBox h2 { font-size: clamp(36px, 4.5vw, 42px);
-          margin-bottom: 12px; }
+      margin-bottom: 12px; }
       #exitBox p { font-size: clamp(24px, 3vw, 28px);
-          margin: 16px 0 24px 0 !important; }
+      margin: 16px 0 24px 0 !important; }
       
       .endBtn{ width:100%;
       margin-top:12px; padding:14px; font-size: clamp(18px, 2vw, 22px); border:none; border-radius:12px; background:#888; color:#fff;
       }
       
-      /* 規則框 (全域化防偏移，改為 fixed) */
+      /* 規則框 */
       #rulesMask{ position:fixed;
       inset:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:100; }
       #rulesBox{ width:70%; height:90%; background:#444; border-radius:18px; display:flex; flex-direction:column; align-items:center;
@@ -465,38 +465,99 @@
       }
 
       /* ======================================================= */
-      /* 電腦版專屬：解決 F11 全螢幕時的跑版與遮罩漏邊問題       */
+      /* 電腦版專屬：解決 F11 漏邊、元件偏移與自動縮放問題       */
       /* ======================================================= */
       @media screen and (min-width: 769px) {
-        /* 讓所有遮罩完全固定於最外層 viewport，徹底解決 F11 漏邊 */
+        #app {
+          container-type: inline-size;
+        }
+        
+        /* 讓所有遮罩回歸 #app 容器內部完美對齊，並利用超大陰影擴散覆蓋 F11 的螢幕黑邊 */
         #detailMask, #feedbackMask, #gameOver, #exitConfirm, #rulesMask {
-          position: fixed !important;
+          position: absolute !important;
           inset: 0 !important;
-          width: 100vw !important;
-          height: 100vh !important;
+          width: 100% !important;
+          height: 100% !important;
         }
+        #detailMask { box-shadow: 0 0 0 100vmax rgba(0,0,0,0.45); }
+        #feedbackMask { box-shadow: 0 0 0 100vmax rgba(0,0,0,0.6); }
+        #rulesMask { box-shadow: 0 0 0 100vmax rgba(0,0,0,0.7); }
+        #gameOver, #exitConfirm { box-shadow: 0 0 0 100vmax rgba(0,0,0,0.8); }
+
+        /* ===== 將 vw/vh 轉換為 cqw，確保按鈕永遠跟隨 16:9 畫面等比縮放不偏移 ===== */
+        .gameBackBtn, #reference .topBack {
+          font-size: clamp(16px, 1.5cqw, 24px) !important;
+          padding: 1cqw 2cqw !important;
+        }
+        #reference .topBack { font-size: clamp(18px, 2.2cqw, 33px) !important; }
+        #questionNumber {
+          font-size: clamp(24px, 3.6cqw, 38px) !important;
+          top: 2% !important;
+        }
+
+        /* ===== 愛心與計時條區塊等比縮放 ===== */
+        #topBar { 
+          top: 11% !important; 
+          height: 6cqw !important; /* 作為內部元素的動態基準高度 */
+        }
+        #lives { 
+          min-height: 0 !important; 
+          height: 100% !important; 
+          gap: 1cqw !important;
+        }
+        .life { 
+          width: auto !important; 
+          height: 100% !important; /* 愛心隨高度完美等比縮放，解鎖原本的固定大小 */
+          max-width: none !important;
+          max-height: none !important;
+        }
+        #timerWrap {
+          height: 100% !important;
+          width: 30cqw !important;
+        }
+        #timerBar {
+          width: 100% !important;
+          height: 60% !important;
+        }
+        #timerText { font-size: clamp(14px, 1.8cqw, 28px) !important; }
+
+        /* ===== 彈窗文字與尺寸轉換為 cqw，防止超大螢幕無限制放大撐爆 ===== */
+        #detailBox { padding: clamp(16px, 2cqw, 24px) !important; }
+        #detailName { font-size: clamp(28px, 3cqw, 40px) !important; }
+        #detailType, #detailDesc { font-size: clamp(18px, 2cqw, 28px) !important; }
+        #detailClose { font-size: clamp(20px, 2cqw, 28px) !important; }
         
-        /* 將垂直定位由 vh 改為 %，確保綁定在 16:9 容器內防止高度重疊 */
-        #questionNumber { top: 2% !important;
-        }
-        #topBar { top: 11% !important;
-        }
+        #feedback { padding: clamp(20px, 3cqw, 28px) !important; }
+        #feedbackImg { width: clamp(100px, 12cqw, 140px) !important; height: clamp(100px, 12cqw, 140px) !important; }
+        #feedbackItemName { font-size: clamp(18px, 2cqw, 22px) !important; }
+        #feedbackTitle { font-size: clamp(28px, 3cqw, 36px) !important; }
+        #feedbackText { font-size: clamp(18px, 2cqw, 24px) !important; }
+        #nextBtn { font-size: clamp(20px, 2cqw, 24px) !important; }
         
+        #gameOverBox, #exitBox { width: clamp(300px, 40cqw, 420px) !important; }
+        #exitBox h2 { font-size: clamp(36px, 4.5cqw, 42px) !important; }
+        #exitBox p { font-size: clamp(24px, 3cqw, 28px) !important; }
+        .endBtn { font-size: clamp(18px, 2cqw, 22px) !important; }
+        
+        #rulesBox { padding: clamp(20px, 2cqw, 20px) !important; }
+        #rulesTitle { font-size: clamp(32px, 3.5cqw, 42px) !important; }
+        .rulesBtn { font-size: clamp(20px, 2cqw, 24px) !important; width: clamp(120px, 15cqw, 160px) !important; }
+        .rulesCloseBtn { font-size: clamp(16px, 1.5cqw, 20px) !important; }
+
         /* 【電腦版優化】讓底部的遊玩核心區域完全限定在「愛心與計時條下方的剩餘空間」進行垂直置中，絕不上漂重疊 */
         #bottomArea { 
           position: absolute !important;
-          top: 30% !important;   /* 完美自頂部往下推開，避開愛心與計時條 */
-          bottom: 2% !important; /* 限制底部最大延伸邊界 */
+          top: 30% !important;   
+          bottom: 2% !important; 
           height: auto !important;
           width: 100% !important;
           display: flex !important;
           justify-content: center !important;
-          align-items: center !important; /* 將垃圾與四個垃圾桶整體當作一個區塊，在該空間內垂直置中 */
+          align-items: center !important; 
         }
         
-        /* 電腦版 bins 間距 */
-        .sideColumn { gap: clamp(70px, 16vh, 160px) !important;
-        } 
+        /* 電腦版 bins 間距隨容器縮放 */
+        .sideColumn { gap: clamp(40px, 8cqw, 160px) !important; } 
       }
 
       /* ======================================================= */
@@ -766,66 +827,64 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div id="detailMask" onclick="if(event.target===this) delayedAction(() => smartCloseDetail())">
-      <div id="detailBox">
-        <div id="detailFlex">
-          <img id="detailImg" src="">
-          <div id="detailText">
-            <h2 id="detailName"></h2>
-            <p id="detailType"></p>
-            <p id="detailDesc"></p>
+      <div id="detailMask" onclick="if(event.target===this) delayedAction(() => smartCloseDetail())">
+        <div id="detailBox">
+          <div id="detailFlex">
+            <img id="detailImg" src="">
+            <div id="detailText">
+              <h2 id="detailName"></h2>
+              <p id="detailType"></p>
+              <p id="detailDesc"></p>
+            </div>
           </div>
+          <button id="detailClose" onclick="delayedAction(() => smartCloseDetail())">確定</button>
+         </div>
+      </div>
+      
+      <div id="rulesMask" onclick="if(event.target===this) delayedAction(() => smartCloseRules())">
+        <div id="rulesBox">
+          <button class="rulesBtn rulesCloseBtn" onclick="delayedAction(() => smartCloseRules())">關閉</button>
+          <h1 id="rulesTitle">規則</h1>
+          <img id="rulesImg" src="">
+          <div id="rulesNav"></div>
         </div>
-        <button id="detailClose" onclick="delayedAction(() => smartCloseDetail())">確定</button>
-       </div>
-    </div>
+      </div>
+
+      <div id="feedbackMask" onclick="if(event.target===this) delayedAction(() => smartNextFeedback())">
+         <div id="feedback">
+          <div id="feedbackFlex">
+             <div>
+              <img id="feedbackImg">
+              <div id="feedbackItemName"></div>
+            </div>
+            <div id="feedbackRight">
+               <div id="feedbackTitle"></div>
+               <div id="feedbackText"></div>
+            </div>
+          </div>
+          <button id="nextBtn" onclick="delayedAction(() => smartNextFeedback())">確認</button>
+        </div>
+      </div>
     
-    <div id="rulesMask" onclick="if(event.target===this) delayedAction(() => smartCloseRules())">
-      <div id="rulesBox">
-        <button class="rulesBtn rulesCloseBtn" onclick="delayedAction(() => smartCloseRules())">關閉</button>
-        <h1 id="rulesTitle">規則</h1>
-        <img id="rulesImg" src="">
-        <div id="rulesNav"></div>
-      </div>
-    </div>
-
-    <div id="feedbackMask" onclick="if(event.target===this) delayedAction(() => smartNextFeedback())">
-       <div id="feedback">
-        <div id="feedbackFlex">
-           <div>
-            <img id="feedbackImg">
-            <div id="feedbackItemName"></div>
-          </div>
-          <div id="feedbackRight">
-             <div id="feedbackTitle"></div>
-             <div id="feedbackText"></div>
-          </div>
+      <div id="gameOver">
+        <div id="gameOverBox">
+          <h1>挑戰結束</h1>
+          <h2 id="finalScore"></h2>
+          <button class="endBtn" onclick="delayedAction(() => startGame())">再來一次</button>
+          <button class="endBtn" onclick="delayedAction(() => smartGameOverHome())">回首頁</button>
         </div>
-        <button id="nextBtn" onclick="delayedAction(() => smartNextFeedback())">確認</button>
       </div>
-    </div>
-  
-    <div id="gameOver">
-      <div id="gameOverBox">
-        <h1>挑戰結束</h1>
-        <h2 id="finalScore"></h2>
-        <button class="endBtn" onclick="delayedAction(() => startGame())">再來一次</button>
-        <button class="endBtn" onclick="delayedAction(() => smartGameOverHome())">回首頁</button>
-      </div>
-    </div>
 
-    <div id="exitConfirm" onclick="if(event.target===this) delayedAction(() => smartCancelExit())">
-       <div id="exitBox">
-        <h2>確定離開遊戲？</h2>
-        <p>目前進度將不會保留</p>
-        <button class="endBtn" onclick="delayedAction(() => exitGame())">離開</button>
-        <button class="endBtn" onclick="delayedAction(() => smartCancelExit())">取消</button>
+      <div id="exitConfirm" onclick="if(event.target===this) delayedAction(() => smartCancelExit())">
+         <div id="exitBox">
+          <h2>確定離開遊戲？</h2>
+          <p>目前進度將不會保留</p>
+          <button class="endBtn" onclick="delayedAction(() => exitGame())">離開</button>
+          <button class="endBtn" onclick="delayedAction(() => smartCancelExit())">取消</button>
+        </div>
       </div>
-    </div>
-
-    <script>
+    </div> <script>
       document.body.addEventListener('touchstart', function() {}, {passive: true});
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 0);
       
