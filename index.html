@@ -221,17 +221,17 @@
         z-index: 2;
       }
       
-      /* ===== 統一分類一覽表與規則框的 Scroll bar 風格 ===== */
-      #itemsPanel::-webkit-scrollbar, #rulesBox::-webkit-scrollbar { 
+      /* ===== 僅針對分類一覽表套用自訂 Scroll bar 風格，避免推擠規則框 ===== */
+      #itemsPanel::-webkit-scrollbar { 
         width:20px; 
       }
-      #itemsPanel::-webkit-scrollbar-track, #rulesBox::-webkit-scrollbar-track { 
+      #itemsPanel::-webkit-scrollbar-track { 
         background:transparent; margin-top:22px; margin-bottom:22px; 
       }
-      #itemsPanel::-webkit-scrollbar-thumb, #rulesBox::-webkit-scrollbar-thumb { 
+      #itemsPanel::-webkit-scrollbar-thumb { 
         background:#777; border-radius:999px; border:6px solid transparent; background-clip:content-box; min-height: 50px; 
       }
-      #itemsPanel::-webkit-scrollbar-thumb:active, #rulesBox::-webkit-scrollbar-thumb:active { 
+      #itemsPanel::-webkit-scrollbar-thumb:active { 
         background: #999; background-clip: content-box; 
       }
       
@@ -444,7 +444,7 @@
         .menuBtn:hover, .topBack:hover, #detailClose:hover, #nextBtn:hover, .endBtn:hover, .rulesBtn:hover, .tabBtn:hover {
           background:#666;
         }
-        #itemsPanel::-webkit-scrollbar-thumb:hover, #rulesBox::-webkit-scrollbar-thumb:hover { 
+        #itemsPanel::-webkit-scrollbar-thumb:hover { 
           background:#999;
           background-clip:content-box;
         }
@@ -581,8 +581,10 @@
         }
         #topBar { top: 11dvh; position: relative; left: 0; right: 0;
         padding: 0 4vw; flex-direction: column; gap: 8px; align-items: center; }
-        #lives { min-height: auto;
-        gap: 4px; }
+        
+        /* 修正點：鎖定愛心欄位的總高度(維持6dvh或40px)，防止愛心消失時倒數計時條往上位移 */
+        #lives { height: 6dvh; max-height: 40px; min-height: auto;
+        gap: 4px; display: flex; align-items: center; justify-content: center; }
         .life { width: 6dvh; height: 6dvh; max-width: 40px; max-height: 40px;
         }
         #timerBar { width: 75vw; height: 32px; border-radius: 12px;
@@ -858,6 +860,7 @@
             // 在feedback框按返回鍵為確認
             processFeedbackNext();
           } else if (poppedFrom === 'gameOver' || poppedFrom === 'reference') {
+            document.getElementById("gameOver").style.display = "none"; // 修正點：手機返回時同步關閉結束框
             showPage("home");
           } else if (poppedFrom === 'game') {
             // 在手機版遊戲中按一下返回鍵跳出回首頁的確認框
@@ -885,7 +888,10 @@
           else if (rules.style.display === "flex") closeRulesUI();
           else if (exitC.style.display === "flex") closeExitUI();
           else if (feedback.style.display === "flex" || feedback.style.display === "block") processFeedbackNext();
-          else if (gameO.style.display === "flex") showPage("home");
+          else if (gameO.style.display === "flex") {
+            document.getElementById("gameOver").style.display = "none";
+            showPage("home");
+          }
           else if (gamePage.style.display === "block" || gamePage.style.display === "flex") openExitUI();
           else if (refPage.style.display === "block" || refPage.style.display === "flex") showPage("home");
         }
@@ -932,6 +938,9 @@
         document.getElementById("rulesMask").style.display = "flex";
         renderRules();
       }
+      function gridRulesFix() {
+        // 保留相容性結構
+      }
       function closeRulesUI() {
         document.getElementById("rulesMask").style.display = "none";
       }
@@ -975,8 +984,14 @@
       }
       function smartCancelExit() { if (isMobile) history.back(); else closeExitUI();
       }
-      function smartGameOverHome() { if (isMobile) history.back(); else showPage('home');
+      
+      // 修正點：挑戰結束框點擊回首頁時，必須強制把結束框徹底隱藏
+      function smartGameOverHome() {
+        document.getElementById("gameOver").style.display = "none"; 
+        if (isMobile) history.back(); 
+        else showPage('home'); 
       }
+      
       function smartNextFeedback() { if (isMobile) history.back(); else processFeedbackNext();
       }
 
@@ -997,16 +1012,13 @@
         openExitUI();
       }
       
-      // ===== 修正重點：退出遊戲時徹底停止背景計時器與重置狀態 =====
       function exitGame() {
-        clearInterval(timer); // 徹底清除計時器，防止在首頁彈出錯誤視窗
+        clearInterval(timer); 
         canDrop = false;
         dragging = false;
         
-        // 移除所有垃圾桶的高亮狀態
         document.querySelectorAll(".bin").forEach(b => b.classList.remove("active"));
         
-        // 若有拖曳到一半的殘影，一併移除
         if (typeof touchGhost !== 'undefined' && touchGhost) {
           touchGhost.remove();
           touchGhost = null;
@@ -1028,7 +1040,7 @@
       }
       function startGame() {
         closeAllMasks();
-        if (isMobile) pushLayer('game'); // 確保遊戲開始時帶有一層狀態
+        if (isMobile) pushLayer('game'); 
         canDrop = true;
         dragging = false;
         pendingGameOver = false;
@@ -1036,7 +1048,6 @@
         score = 0;
         totalQ = 0;
         recentImages = [];
-        // 重置記憶題庫
         showPage("gamePage");
         renderLives();
         nextQuestion();
@@ -1069,7 +1080,7 @@
         {name:"煤油桶",img:"garbage-image/kerosene-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"易拉罐",img:"garbage-image/tin-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"金屬茶葉罐",img:"garbage-image/metal-tea-canister.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
-        {name:"飲料鐵罐",img:"garbage-image/metal-drink-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
+        {name:"飲料鐵罐",img:"garbage-image/metal-drink-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車.。"},
         {name:"餅乾鐵罐",img:"garbage-image/cookie-tin.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"鐵罐",img:"garbage-image/metal-can.jpg",type:"recycle",desc:"請排空內容物，簡易清潔並妥善分類，交給清潔隊循線回收車。"},
         {name:"殺蟲劑罐、殺蟑劑罐",img:"garbage-image/insecticide-spray-can.jpg",type:"recycle",desc:"惟高壓氣體可能易燃或高溫引爆，回收前應先至空曠處將內容物排出，並妥善分類，單獨交給清潔隊循線回收車。"},
@@ -1228,7 +1239,6 @@
       }
       
       function renderRules(){
-        // 依據是否為手機裝置，來決定使用哪一組圖片陣列
         const currentImages = isMobile ?
         rulesImagesMobile : rulesImages;
         
@@ -1384,7 +1394,6 @@
         });
       
         bin.addEventListener("dragleave", () => {
-  
           bin.classList.remove("active");
         });
         
@@ -1402,9 +1411,7 @@
           if (user === current.type) {
             score++;
             showFeedback(true);
-   
          } else {
-  
             wrongAnswer(false);
           }
         });
@@ -1451,7 +1458,6 @@
         let rect = app.getBoundingClientRect();
         
         let relativeX = touch.clientX - rect.left;
-        
         let relativeY = touch.clientY - rect.top;
  
         touchGhost.style.left = (relativeX - touchGhost.offsetWidth / 2) + "px";
@@ -1461,9 +1467,7 @@
         document.querySelectorAll(".bin").forEach(b => b.classList.remove("active"));
         if (target) {
           let bin = target.closest(".bin");
-         
          if (bin && canDrop) {
-   
            bin.classList.add("active");
           }
         }
@@ -1479,7 +1483,6 @@
         
         let touch = e.changedTouches[0];
         
- 
         let target = document.elementFromPoint(touch.clientX, touch.clientY);
         let bin = target ? target.closest(".bin") : null;
         
@@ -1490,7 +1493,6 @@
         canDrop = false;
         clearInterval(timer);
         
-  
        let user = bin.dataset.type;
         
         if (user === current.type) {
