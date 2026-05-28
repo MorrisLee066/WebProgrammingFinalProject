@@ -139,11 +139,11 @@
         padding: 20px;
       }
       
-      /* 【電腦版專屬】分類一覽表的回首頁按鈕放大 1.5 倍 */
+      /* 【電腦版專屬】分類一覽表的回首頁按鈕放大 1.5 倍 (vw/vh 轉為 % 防偏移) */
       #reference .topBack {
         position: absolute;
-        top: 3vh;
-        left: 3vw;
+        top: 4%;
+        left: 3%;
         margin-bottom: 0;
         z-index: 10;
         font-size: clamp(27px, 2.25vw, 33px);
@@ -221,12 +221,18 @@
         z-index: 2;
       }
       
-      #itemsPanel::-webkit-scrollbar{ width:20px;
+      /* ===== 統一分類一覽表與規則框的 Scroll bar 風格 ===== */
+      #itemsPanel::-webkit-scrollbar, #rulesBox::-webkit-scrollbar { 
+        width:20px; 
       }
-      #itemsPanel::-webkit-scrollbar-track{ background:transparent; margin-top:22px; margin-bottom:22px; }
-      #itemsPanel::-webkit-scrollbar-thumb{ background:#777; border-radius:999px;
-      border:6px solid transparent; background-clip:content-box; min-height: 50px; }
-      #itemsPanel::-webkit-scrollbar-thumb:active { background: #999; background-clip: content-box;
+      #itemsPanel::-webkit-scrollbar-track, #rulesBox::-webkit-scrollbar-track { 
+        background:transparent; margin-top:22px; margin-bottom:22px; 
+      }
+      #itemsPanel::-webkit-scrollbar-thumb, #rulesBox::-webkit-scrollbar-thumb { 
+        background:#777; border-radius:999px; border:6px solid transparent; background-clip:content-box; min-height: 50px; 
+      }
+      #itemsPanel::-webkit-scrollbar-thumb:active, #rulesBox::-webkit-scrollbar-thumb:active { 
+        background: #999; background-clip: content-box; 
       }
       
       #itemsGrid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:16px;
@@ -238,10 +244,10 @@
       .itemName{ margin-top:8px; font-size: clamp(16px, 1.5vw, 22px); color:#fff;
       }
       
-      /* 詳細資料彈窗 */
+      /* 詳細資料彈窗 (全域化防偏移，改為 fixed) */
       #detailMask{
-        position:absolute;
-        inset:0; background:rgba(0,0,0,.45); display:flex; justify-content:center; align-items:center; z-index:10;
+        position:fixed;
+        inset:0; background:rgba(0,0,0,.45); display:flex; justify-content:center; align-items:center; z-index:100;
         opacity:0; pointer-events:none; transition:opacity .25s ease;
       }
       #detailMask.show{ opacity:1; pointer-events:auto;
@@ -267,13 +273,13 @@
         font-size: clamp(20px, 2vw, 28px); border:none; border-radius:16px; background:#888; color:#fff;
       }
       
-      /* 遊戲頁 */
+      /* 遊戲頁 (vw/vh 轉為 % 防偏移) */
       .gameBackBtn{ position:absolute;
-      top:2vh; left:2vw; z-index:5; }
+      top:3%; left:3%; z-index:5; }
       
       #questionNumber{
         position:absolute;
-        top:1vh;
+        top:2%;
         left:50%;
         transform:translateX(-50%);
         font-size: clamp(28px, 3.6vw, 38px); 
@@ -281,9 +287,9 @@
       
       #topBar{
         position:absolute;
-        top:9vh;
-        left:2vw;
-        right:2vw;
+        top:11%;
+        left:3%;
+        right:3%;
         display:flex;
         justify-content:space-between;
         align-items:center;
@@ -311,8 +317,8 @@
       
       #bottomArea{
         position:absolute;
-        bottom: 8vh; width:100%; display:flex; justify-content:center;
-        gap: clamp(16px, 3vw, 3vw); align-items: center;
+        bottom: 8%; width:100%; display:flex; justify-content:center;
+        gap: clamp(16px, 3%, 32px); align-items: center;
       }
       
       #centerGarbage{ width:30%; text-align:center;
@@ -366,13 +372,13 @@
         background:#444; border-radius:16px; display:flex; justify-content:center; align-items:center; font-size: clamp(34px, 4.3vw, 46px);
       }
       
-      /* 回饋 */
+      /* 回饋 (全域化防偏移，改為 fixed) */
       #feedback{
         width:fit-content;
         max-width:60%; min-width:320px; background:#444; color:#fff; border-radius:18px; padding: clamp(20px, 3vw, 28px); text-align:left;
       }
-      #feedbackMask{ position:absolute; inset:0; background:rgba(0,0,0,.6);
-      display:none; justify-content:center; align-items:center; z-index:10; }
+      #feedbackMask{ position:fixed; inset:0; background:rgba(0,0,0,.6);
+      display:none; justify-content:center; align-items:center; z-index:100; }
       #feedbackFlex{ display:flex; gap:20px; align-items:center;
       }
       #feedbackImg{ width: clamp(100px, 12vw, 140px); height: clamp(100px, 12vw, 140px); object-fit:cover; border-radius:12px; background:#555;
@@ -387,9 +393,9 @@
       #nextBtn{ margin:18px auto 0; display:block; padding:14px 32px; font-size: clamp(20px, 2vw, 24px); border:none; border-radius:12px; background:#837f7f;
       color:#fff; }
       
-      /* 結束 / 離開 */
-      #gameOver, #exitConfirm{ position:absolute;
-      inset:0; background:rgba(0,0,0,.8); display:none; justify-content:center; align-items:center; z-index:30; }
+      /* 結束 / 離開 (全域化防偏移，改為 fixed) */
+      #gameOver, #exitConfirm{ position:fixed;
+      inset:0; background:rgba(0,0,0,.8); display:none; justify-content:center; align-items:center; z-index:100; }
       #gameOverBox, #exitBox{
         width: clamp(300px, 40vw, 420px);
         background:#6d6868; color:#fff; display: flex; flex-direction: column; gap: 12px; padding:30px; border-radius:20px; text-align:center;
@@ -404,9 +410,9 @@
       margin-top:12px; padding:14px; font-size: clamp(18px, 2vw, 22px); border:none; border-radius:12px; background:#888; color:#fff;
       }
       
-      /* 規則框 */
-      #rulesMask{ position:absolute;
-      inset:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:40; }
+      /* 規則框 (全域化防偏移，改為 fixed) */
+      #rulesMask{ position:fixed;
+      inset:0; background:rgba(0,0,0,0.7); display:none; justify-content:center; align-items:center; z-index:100; }
       #rulesBox{ width:70%; height:90%; background:#444; border-radius:18px; display:flex; flex-direction:column; align-items:center;
       padding:20px; gap:12px; box-shadow:0 10px 25px rgba(0,0,0,0.6); position: relative; }
       .rulesCloseBtn { position: absolute; top: 20px;
@@ -438,7 +444,9 @@
         .menuBtn:hover, .topBack:hover, #detailClose:hover, #nextBtn:hover, .endBtn:hover, .rulesBtn:hover, .tabBtn:hover {
           background:#666;
         }
-        #itemsPanel::-webkit-scrollbar-thumb:hover{ background:#999; background-clip:content-box;
+        #itemsPanel::-webkit-scrollbar-thumb:hover, #rulesBox::-webkit-scrollbar-thumb:hover { 
+          background:#999;
+          background-clip:content-box;
         }
       }
 
@@ -471,7 +479,7 @@
         /* 將垂直定位由 vh 改為 %，確保綁定在 16:9 容器內防止高度重疊 */
         #questionNumber { top: 2% !important;
         }
-        #topBar { top: 10% !important;
+        #topBar { top: 11% !important;
         }
         #bottomArea { bottom: 8% !important;
         }
@@ -520,18 +528,8 @@
       /* ======================================================= */
       /* 防呆：加入 pointer:coarse 與 max-width 雙重限制，絕對不讓電腦視窗縮小觸發 */
       @media screen and (max-width: 1024px) and (orientation: portrait) and (pointer: coarse) {
-        /* ===== 修正1：徹底消滅頂部多餘空間 ===== */
-        #app { 
-          aspect-ratio: auto;
-          width: 100vw; 
-          height: 100dvh; 
-          max-height: none; /* 覆蓋電腦版的高度限制 */
-          margin: 0;        /* 覆蓋電腦版的 auto margin */
-          position: absolute; /* 強制吸附螢幕左上角，不受 body 置中影響 */
-          top: 0;
-          left: 0;
-          overflow: hidden; 
-          display: block; 
+        #app { aspect-ratio: auto;
+        width: 100vw; height: 100dvh; overflow: hidden; display: flex; flex-direction: column;
         }
 
         #home { height: 100dvh;
@@ -643,21 +641,15 @@
         #exitBox p { font-size: clamp(18px, 4vw, 28px);
         }
 
-        /* ===== 修正2：破解規則框被強壓在正中心的魔咒 ===== */
-        #rulesMask {
-          align-items: flex-start !important; /* 不再強制居中，改為靠上對齊 */
-          padding-top: 4dvh; /* 控制框體距離螢幕頂端的一點點呼吸空間 */
-        }
-        
         /* 將規則框拉長，確保底部導覽列不被擠出框外 */
         #rulesBox { 
           width: 90vw;
           height: auto; 
           min-height: 85dvh; /* 拉長規則框的高度保證按鈕都在框內 */
-          max-height: 92dvh; /* 設定上限避免在過小螢幕破版 */
+          max-height: 92dvh;
           padding: 50px 16px 20px;
           justify-content: space-between;
-          margin: 0; /* 配合 flex-start 清除預設 margin */
+          margin: 0;
           overflow-y: auto;
         }
         
@@ -669,7 +661,7 @@
           z-index: 10;
         }
         
-        /* ===== 手機版 5:7 直立規則圖設定 (完全保留你的設定) ===== */
+        /* ===== 手機版 5:7 直立規則圖設定 ===== */
         #rulesImg { 
           width: 100%;
           max-height: 65vh; 
@@ -713,7 +705,6 @@
             <button class="menuBtn" onclick="delayedAction(() => openRules())">規則</button>
             <button class="menuBtn listBtn" onclick="delayedAction(() => openReference())">分類一覽表</button>
           </div>
-  
         </div>
         <div id="sourceText">分類依據：桃園市政府環境保護局資源回收教育網</div>
       </div>
@@ -725,43 +716,15 @@
           <div id="refTitle">分類一覽表</div>
           <div id="refWrap">
             <div id="categoryTabs">
- 
               <button class="tabBtn active" onclick="changeCategory('general',this)">一般垃圾</button>
               <button class="tabBtn" onclick="changeCategory('recycle',this)">資源回收</button>
               <button class="tabBtn" onclick="changeCategory('food',this)">廚餘回收</button>
               <button class="tabBtn" onclick="changeCategory('other',this)">其他</button>
             </div>
             <div id="itemsPanel">
-           
                <div id="itemsGrid"></div>
             </div>
           </div>
-        </div>
-
-        <div id="detailMask" onclick="if(event.target===this) delayedAction(() => smartCloseDetail())">
-          <div id="detailBox">
-            <div id="detailFlex">
-              <img id="detailImg" src="">
-             
-               <div id="detailText">
-                <h2 id="detailName"></h2>
-                <p id="detailType"></p>
-                <p id="detailDesc"></p>
-              </div>
-            </div>
-            <button id="detailClose" onclick="delayedAction(() => smartCloseDetail())">確定</button>
-     
-           </div>
-        </div>
-      </div>
-      
-      <div id="rulesMask" onclick="if(event.target===this) delayedAction(() => smartCloseRules())">
-        <div id="rulesBox">
-          <button class="rulesBtn rulesCloseBtn" onclick="delayedAction(() => smartCloseRules())">關閉</button>
-          <h1 id="rulesTitle">規則</h1>
-          <img id="rulesImg" src="">
-          <div id="rulesNav"></div>
-      
         </div>
       </div>
  
@@ -773,7 +736,6 @@
           <div id="lives"></div>
           <div id="timerWrap">
             <div id="timerBar">
-         
                <div id="timerFill"></div>
               <div id="timerText">倒數計時</div>
             </div>
@@ -781,10 +743,8 @@
         </div>
         
         <div id="bottomArea">
-        
           <div class="sideColumn">
-            <div 
- class="bin" data-type="general"><img src="in-game-UI-images/trash.png"></div>
+            <div class="bin" data-type="general"><img src="in-game-UI-images/trash.png"></div>
             <div class="bin" data-type="recycle"><img src="in-game-UI-images/recycling.png"></div>
           </div>
         
@@ -793,57 +753,71 @@
             <div id="garbageName"></div>
           </div>
         
-        
            <div class="sideColumn">
             <div class="bin" data-type="food"><img src="in-game-UI-images/food-waste.png"></div>
             <div class="bin" data-type="other"><div class="otherBox">其他</div></div>
           </div>
-        
         </div>
-
-        <div id="feedbackMask" onclick="if(event.target===this) delayedAction(() => smartNextFeedback())">
-          <div id="feedback">
-            <div id="feedbackFlex">
-    
-               <div>
-                <img id="feedbackImg">
-                <div id="feedbackItemName"></div>
-              </div>
-            
-              <div id="feedbackRight">
-               
-                 <div id="feedbackTitle"></div>
-                <div id="feedbackText"></div>
-              </div>
-            </div>
-            <button id="nextBtn" onclick="delayedAction(() => smartNextFeedback())">確認</button>
-          </div>
-        </div>
-      
-        <div id="gameOver">
-      
-          <div id="gameOverBox">
-            <h1>挑戰結束</h1>
-            <h2 id="finalScore"></h2>
-            <button class="endBtn" onclick="delayedAction(() => startGame())">再來一次</button>
-            <button class="endBtn" onclick="delayedAction(() => smartGameOverHome())">回首頁</button>
-          </div>
-        </div>
-   
-        <div id="exitConfirm" onclick="if(event.target===this) delayedAction(() => smartCancelExit())">
-    
-           <div id="exitBox">
-            <h2>確定離開遊戲？</h2>
-            <p>目前進度將不會保留</p>
-            <button class="endBtn" onclick="delayedAction(() => exitGame())">離開</button>
-            <button class="endBtn" onclick="delayedAction(() => smartCancelExit())">取消</button>
-          </div>
-        </div>
-        
       </div>
     </div>
- 
+
+    <div id="detailMask" onclick="if(event.target===this) delayedAction(() => smartCloseDetail())">
+      <div id="detailBox">
+        <div id="detailFlex">
+          <img id="detailImg" src="">
+          <div id="detailText">
+            <h2 id="detailName"></h2>
+            <p id="detailType"></p>
+            <p id="detailDesc"></p>
+          </div>
+        </div>
+        <button id="detailClose" onclick="delayedAction(() => smartCloseDetail())">確定</button>
+       </div>
+    </div>
     
+    <div id="rulesMask" onclick="if(event.target===this) delayedAction(() => smartCloseRules())">
+      <div id="rulesBox">
+        <button class="rulesBtn rulesCloseBtn" onclick="delayedAction(() => smartCloseRules())">關閉</button>
+        <h1 id="rulesTitle">規則</h1>
+        <img id="rulesImg" src="">
+        <div id="rulesNav"></div>
+      </div>
+    </div>
+
+    <div id="feedbackMask" onclick="if(event.target===this) delayedAction(() => smartNextFeedback())">
+       <div id="feedback">
+        <div id="feedbackFlex">
+           <div>
+            <img id="feedbackImg">
+            <div id="feedbackItemName"></div>
+          </div>
+          <div id="feedbackRight">
+             <div id="feedbackTitle"></div>
+             <div id="feedbackText"></div>
+          </div>
+        </div>
+        <button id="nextBtn" onclick="delayedAction(() => smartNextFeedback())">確認</button>
+      </div>
+    </div>
+  
+    <div id="gameOver">
+      <div id="gameOverBox">
+        <h1>挑戰結束</h1>
+        <h2 id="finalScore"></h2>
+        <button class="endBtn" onclick="delayedAction(() => startGame())">再來一次</button>
+        <button class="endBtn" onclick="delayedAction(() => smartGameOverHome())">回首頁</button>
+      </div>
+    </div>
+
+    <div id="exitConfirm" onclick="if(event.target===this) delayedAction(() => smartCancelExit())">
+       <div id="exitBox">
+        <h2>確定離開遊戲？</h2>
+        <p>目前進度將不會保留</p>
+        <button class="endBtn" onclick="delayedAction(() => exitGame())">離開</button>
+        <button class="endBtn" onclick="delayedAction(() => smartCancelExit())">取消</button>
+      </div>
+    </div>
+
     <script>
       document.body.addEventListener('touchstart', function() {}, {passive: true});
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 0);
@@ -877,25 +851,21 @@
             closeDetailUI();
           } else if (poppedFrom === 'rules') {
             closeRulesUI();
-          } else if (poppedFrom 
- === 'exit') {
+          } else if (poppedFrom === 'exit') {
             // 在確認框按返回鍵為取消
             closeExitUI();
           } else if (poppedFrom === 'feedback') {
             // 在feedback框按返回鍵為確認
             processFeedbackNext();
           } else if (poppedFrom === 'gameOver' || poppedFrom === 'reference') {
-           
             showPage("home");
           } else if (poppedFrom === 'game') {
             // 在手機版遊戲中按一下返回鍵跳出回首頁的確認框
             openExitUI();
             // 由於 popstate 把 game 給彈出了，我們必須將 game 補回去，然後再推入 exit
             // 這樣下一層的返回（取消）才會精準回到 game
-            
             pushLayer('game');
             pushLayer('exit');
- 
           }
         });
       }
@@ -907,22 +877,20 @@
           const rules = document.getElementById("rulesMask");
           const exitC = document.getElementById("exitConfirm");
           const feedback = document.getElementById("feedbackMask");
-       
-           const gameO = document.getElementById("gameOver");
+          const gameO = document.getElementById("gameOver");
           const gamePage = document.getElementById("gamePage");
           const refPage = document.getElementById("reference");
 
           if (detail.classList.contains("show")) closeDetailUI();
           else if (rules.style.display === "flex") closeRulesUI();
           else if (exitC.style.display === "flex") closeExitUI();
-          else if (feedback.style.display === "flex" || feedback.style.display === 
-"block") processFeedbackNext();
-       
-           else if (gameO.style.display === "flex") showPage("home");
+          else if (feedback.style.display === "flex" || feedback.style.display === "block") processFeedbackNext();
+          else if (gameO.style.display === "flex") showPage("home");
           else if (gamePage.style.display === "block" || gamePage.style.display === "flex") openExitUI();
           else if (refPage.style.display === "block" || refPage.style.display === "flex") showPage("home");
         }
       });
+
       // ===== 按鈕點擊延遲系統 (修改為100毫秒) =====
       let isActionPending = false;
       function delayedAction(callback) {
@@ -1028,11 +996,27 @@
         if (isMobile) pushLayer('exit');
         openExitUI();
       }
+      
+      // ===== 修正重點：退出遊戲時徹底停止背景計時器與重置狀態 =====
       function exitGame() {
+        clearInterval(timer); // 徹底清除計時器，防止在首頁彈出錯誤視窗
+        canDrop = false;
+        dragging = false;
+        
+        // 移除所有垃圾桶的高亮狀態
+        document.querySelectorAll(".bin").forEach(b => b.classList.remove("active"));
+        
+        // 若有拖曳到一半的殘影，一併移除
+        if (typeof touchGhost !== 'undefined' && touchGhost) {
+          touchGhost.remove();
+          touchGhost = null;
+        }
+
         closeExitUI();
         showPage("home");
         if (isMobile) replaceLayer('home');
       }
+
       function showFeedback(correct) {
         if (isMobile) pushLayer('feedback');
         showFeedbackUI(correct);
@@ -1128,7 +1112,7 @@
         {name:"筆記書紙",img:"garbage-image/notebook-paper.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"電腦紙報表",img:"garbage-image/computer-paper.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"紙餐具(含免洗餐具)",img:"garbage-image/paper-tableware-disposable-tableware.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
-       
+      
         {name:"利樂包",img:"garbage-image/tetra-pak-cartons.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"鋁箔包",img:"garbage-image/aluminum-foil-package.jpg",type:"recycle",desc:"請排空內容物，簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         
@@ -1141,6 +1125,7 @@
         {name:"清潔劑瓶(含洗碗精、洗衣精)",img:"garbage-image/cleaner-bottle.jpg",type:"recycle",desc:"請簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"洗髮精瓶",img:"garbage-image/shampoo-bottle.jpg",type:"recycle",desc:"請簡易清潔與壓扁後，交給清潔隊循線回收車。"},
         {name:"牛奶瓶",img:"garbage-image/milk-bottle.jpg",type:"recycle",desc:"請簡易清潔與壓扁後，交給清潔隊循線回收車。"},
+   
         {name:"豆漿瓶、優酪乳",img:"garbage-image/soy-milk-bottle-yogurt-drink-bottle.jpg",type:"recycle",desc:"請簡易清潔與壓扁後，交給清潔隊循線回收車。"},
    
         {name:"保麗龍",img:"garbage-image/styrofoam.jpg",type:"recycle",desc:"請簡易清潔去除黏附之膠帶附著物後，交給清潔隊循線回收車。"},
@@ -1154,6 +1139,7 @@
         {name:"壓克力(平板)",img:"garbage-image/acrylic-sheet.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"塑膠水桶",img:"garbage-image/plastic-bucket.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
         {name:"塑膠工具箱",img:"garbage-image/plastic-toolbox.jpg",type:"recycle",desc:"請妥善分類後，交給清潔隊循線回收車。"},
+      
         {name:"塑膠氣泡紙(包裝用透明)",img:"garbage-image/plastic-bubble-wrap.jpg",type:"recycle",desc:"妥善裝袋後交給循線資收車。"},
         {name:"水管",img:"garbage-image/water-pipe.jpg",type:"recycle",desc:"妥善裝袋後交給循線回收車。"},
    
@@ -1166,8 +1152,10 @@
         
         {name:"米食",img:"garbage-image/rice-based-food.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         {name:"豆食",img:"garbage-image/soy-based-food.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
+       
         {name:"蛋類",img:"garbage-image/egg-based-food.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
         {name:"肉類",img:"garbage-image/meat-based-food.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
+ 
         {name:"麵食類",img:"garbage-image/flour-based-food.jpeg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
        
         {name:"零食類",img:"garbage-image/snack.jpg",type:"food",desc:"可回收廚餘：請瀝乾後丟至廚餘回收桶。"},
@@ -1179,8 +1167,10 @@
         {name:"鹼性電池",img:"garbage-image/alkaline-battery.png",type:"other",desc:"請妥善分類後，單獨交給清潔隊循線回收車。"},
         {name:"手推車(鐵製)",img:"garbage-image/iron-handcart.jpg",type:"other",desc:"請民眾先行拆解後(布、塑膠類或輪胎分離)，再交由資源回收車，若為大型推車，請洽清潔隊約定收運。"},
         {name:"鐵製保險箱",img:"garbage-image/iron-safe.jpg",type:"other",desc:"請妥善裝袋後交給循線垃圾車，惟若確認有回收標誌或可回收材質部門經現場人員判定後即可回收；如體積較大，請於丟出前先洽清潔隊預約收運。"},
+       
         {name:"平板玻璃(強化玻璃、玻璃塑鋼、膠合玻璃)",img:"garbage-image/flat-glass.jpg",type:"other",desc:"請先敲碎並妥善包裝防穿破，交給清潔隊循線垃圾車，若為大型玻璃，請洽清潔隊預約收運。"},
         {name:"隔熱玻璃",img:"garbage-image/insulated-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
+  
         {name:"玻璃桌墊",img:"garbage-image/glass-table-pad.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"煤油燈(玻璃)",img:"garbage-image/kerosene-lamp.jpg",type:"other",desc:"請排空內容物，妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請洽清潔隊預約收運。"},
        
@@ -1192,8 +1182,10 @@
         
         {name:"魚缸玻璃",img:"garbage-image/fish-tank-glass.jpg",type:"other",desc:"請妥善包裝防穿破，單獨交給清潔隊循線垃圾車，若為大型玻璃，請另外與清潔隊預約收運。"},
         {name:"化學用品罐",img:"garbage-image/chemical-glass-jar.jpg",type:"other",desc:"有骷顱頭、火焰等標示者請務必逆向回收予原製造或購置廠商。"},
+  
         {name:"飲水機換裝桶",img:"garbage-image/water-dispenser-refill-bottle.jpg",type:"other",desc:"請交由生產或販賣業者逆向回收。"},
       ];
+
       // ===== 電腦版橫式規則圖片 =====
       const rulesImages = [
         "rule-image/rule-page1.png",
@@ -1208,12 +1200,14 @@
         "rule-image/rule-page3-mobile.png",
         "rule-image/rule-page4-mobile.png"
       ];
+      
       let rulePage = 0;
       let lives,score,totalQ,current,timeLimit,endTime,timer;
       let canDrop=false;
       let dragging=false;
       let pendingGameOver=false;
       let recentImages = [];
+      
       function changeCategory(type,btn){
         document.querySelectorAll(".tabBtn").forEach(t=>{
           t.classList.remove("active");
@@ -1400,7 +1394,6 @@
           
           if (!canDrop || !dragging) return;
           
-       
           dragging = false;
           canDrop = false;
           clearInterval(timer);
