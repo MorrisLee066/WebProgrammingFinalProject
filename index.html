@@ -598,8 +598,18 @@
       /* ===== 手機直式原生的響應式版型 ===== */
       /* ======================================================= */
       @media screen and (max-width: 1024px) and (orientation: portrait) and (pointer: coarse) {
-        #app { aspect-ratio: auto;
-        width: 100vw; height: 100dvh; overflow: hidden; display: flex; flex-direction: column;
+        /* ===== 徹底破解長螢幕手機被置中推擠的元凶 ===== */
+        #app { 
+          aspect-ratio: auto;
+          width: 100vw; 
+          height: 100dvh; 
+          max-height: none; /* 移除電腦版高度限制 */
+          margin: 0; /* 移除電腦版 auto 邊距 */
+          position: fixed; /* 強制吸附可見視窗，破解 body 置中推擠 */
+          top: 0;
+          left: 0;
+          overflow: hidden; 
+          display: block; 
         }
 
         #home { height: 100dvh;
